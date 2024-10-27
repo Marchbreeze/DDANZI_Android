@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_white_fill_10_rect"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="34dp">
+
+        <TextView
+            android:id="@+id/tv_confirm_title"
+            style="@style/TextAppearance.DDanzi.Title4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/sell_confirm_dialog_tv_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_confirm_subtitle"
+            style="@style/TextAppearance.DDanzi.Body5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:text="@string/sell_confirm_dialog_tv_subtitle"
+            android:textColor="@color/gray_3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_confirm_title" />
+
+        <TextView
+            android:id="@+id/btn_confirm"
+            style="@style/TextAppearance.DDanzi.Body4"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/shape_black_fill_5_rect"
+            android:gravity="center"
+            android:paddingVertical="16dp"
+            android:text="@string/sell_confirm_dialog_btn_confirm"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_confirm_subtitle" />
+
+        <TextView
+            android:id="@+id/btn_return"
+            style="@style/TextAppearance.DDanzi.Body6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:paddingVertical="8dp"
+            android:text="@string/sell_confirm_dialog_btn_return"
+            android:textColor="@color/gray_3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_confirm" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

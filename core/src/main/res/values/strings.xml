@@ -217,6 +217,11 @@
     <string name="sell_confirm_btn_copy">복사</string>
     <string name="sell_order_fix_msg">판매 확정을 완료했습니다.</string>
 
+    <string name="sell_confirm_dialog_tv_title">판매 확정하시겠습니까?</string>
+    <string name="sell_confirm_dialog_tv_subtitle">카카오톡 선물하기에 모든 정보를\n정확히 입력하셨나요?</string>
+    <string name="sell_confirm_dialog_btn_confirm">네, 입력했습니다</string>
+    <string name="sell_confirm_dialog_btn_return">다시 확인하기</string>
+
     <string name="sign_up_tv_title">본인 인증을\n진행해주세요</string>
     <string name="sign_up_tv_subtitle">본인 명의의 휴대폰 번호로 인증을 진행해주세요</string>
     <string name="sign_up_tv_name">이름</string>
