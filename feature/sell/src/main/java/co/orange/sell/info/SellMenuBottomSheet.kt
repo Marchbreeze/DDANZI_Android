@@ -30,7 +30,6 @@ class SellMenuBottomSheet :
         binding.btnDelete.setOnSingleClickListener {
             sellDeleteDialog = SellDeleteDialog()
             sellDeleteDialog?.show(childFragmentManager, sellDeleteDialog?.tag)
-            dismiss()
         }
     }
 }
