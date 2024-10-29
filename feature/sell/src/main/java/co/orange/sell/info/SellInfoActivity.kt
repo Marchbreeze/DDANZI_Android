@@ -31,14 +31,16 @@ import co.orange.sell.R as featureR
 class SellInfoActivity : BaseActivity<ActivitySellInfoBinding>(featureR.layout.activity_sell_info) {
     private val viewModel by viewModels<SellInfoViewModel>()
 
+    private var sellMenuBottomSheet: SellMenuBottomSheet? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         initExitBtnListener()
         initSellConfirmBtnListener()
+        initMenuBtnListener()
         getIntentInfo()
         observeGetSellInfoState()
-        observeDeleteItemState()
     }
 
     private fun initExitBtnListener() {
@@ -47,17 +49,16 @@ class SellInfoActivity : BaseActivity<ActivitySellInfoBinding>(featureR.layout.a
 
     private fun initSellConfirmBtnListener() {
         binding.btnSellConfirm.setOnSingleClickListener {
-            if (viewModel.isOnSale) {
-                viewModel.deleteSellingItemFromServer()
-            } else {
-                startActivity(
-                    SellConfirmActivity.createIntent(
-                        this,
-                        viewModel.orderId,
-                        viewModel.totalPrice,
-                    ),
-                )
-            }
+            startActivity(
+                SellConfirmActivity.createIntent(this, viewModel.orderId, viewModel.totalPrice),
+            )
+        }
+    }
+
+    private fun initMenuBtnListener() {
+        binding.btnMenu.setOnSingleClickListener {
+            sellMenuBottomSheet = SellMenuBottomSheet()
+            sellMenuBottomSheet?.show(supportFragmentManager, sellMenuBottomSheet?.tag)
         }
     }
 
@@ -106,7 +107,6 @@ class SellInfoActivity : BaseActivity<ActivitySellInfoBinding>(featureR.layout.a
     }
 
     private fun setItemStatus(status: String) {
-        viewModel.isOnSale = status == ItemStatus.ON_SALE.name
         val (infoMsgResId, btnTextResId, isButtonEnabled) =
             when (status) {
                 ItemStatus.ON_SALE.name -> {
@@ -154,23 +154,6 @@ class SellInfoActivity : BaseActivity<ActivitySellInfoBinding>(featureR.layout.a
                 ivSellToast.isVisible = false
             }
         }
-    }
-
-    private fun observeDeleteItemState() {
-        viewModel.deleteItemState
-            .flowWithLifecycle(lifecycle)
-            .distinctUntilChanged()
-            .onEach { state ->
-                when (state) {
-                    is UiState.Success -> {
-                        toast(stringOf(R.string.sell_delete_success_toast))
-                        finish()
-                    }
-
-                    is UiState.Failure -> toast(stringOf(R.string.error_msg))
-                    else -> return@onEach
-                }
-            }.launchIn(lifecycleScope)
     }
 
     companion object {
