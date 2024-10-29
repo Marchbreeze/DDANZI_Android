@@ -110,7 +110,7 @@ class SellInfoActivity : BaseActivity<ActivitySellInfoBinding>(featureR.layout.a
         val (infoMsgResId, btnTextResId, isButtonEnabled) =
             when (status) {
                 ItemStatus.ON_SALE.name -> {
-                    Triple(R.string.sell_info_msg_on_sale, R.string.sell_info_msg_cancel, true)
+                    Triple(R.string.sell_info_msg_on_sale, R.string.sell_info_btn_fix, false)
                 }
 
                 ItemStatus.ORDER_PLACE.name -> {
