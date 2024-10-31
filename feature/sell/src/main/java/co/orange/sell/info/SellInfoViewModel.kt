@@ -21,8 +21,6 @@ class SellInfoViewModel
         var orderId = ""
         var totalPrice = 0
 
-        var isOnSale = true
-
         private val _getSellInfoState = MutableStateFlow<UiState<SellInfoModel>>(UiState.Empty)
         val getSellInfoState: StateFlow<UiState<SellInfoModel>> = _getSellInfoState
 

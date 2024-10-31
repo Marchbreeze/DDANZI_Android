@@ -206,6 +206,11 @@
     <string name="sell_info_msg_ordered">입금 완료</string>
     <string name="sell_info_btn_fix">판매 확정하기</string>
     <string name="sell_info_btn_shipping">배송 중인 상품입니다.</string>
+
+    <string name="sell_delete_btn_delete">판매 취소하기</string>
+    <string name="sell_delete_tv_title">판매 취소</string>
+    <string name="sell_delete_tv_subtitle">정말 판매 취소를 하시겠습니까?</string>
+    <string name="sell_delete_btn_sell_delete">확인</string>
     <string name="sell_delete_success_toast">상품 판매가 취소되었습니다.</string>
 
     <string name="sell_confirm_tv_title">판매 확정</string>
@@ -216,6 +221,11 @@
     <string name="sell_confirm_tv_option">선택 옵션</string>
     <string name="sell_confirm_btn_copy">복사</string>
     <string name="sell_order_fix_msg">판매 확정을 완료했습니다.</string>
+
+    <string name="sell_confirm_dialog_tv_title">판매 확정하시겠습니까?</string>
+    <string name="sell_confirm_dialog_tv_subtitle">카카오톡 선물하기에 모든 정보를\n정확히 입력하셨나요?</string>
+    <string name="sell_confirm_dialog_btn_confirm">네, 입력했습니다</string>
+    <string name="sell_confirm_dialog_btn_return">다시 확인하기</string>
 
     <string name="sign_up_tv_title">본인 인증을\n진행해주세요</string>
     <string name="sign_up_tv_subtitle">본인 명의의 휴대폰 번호로 인증을 진행해주세요</string>

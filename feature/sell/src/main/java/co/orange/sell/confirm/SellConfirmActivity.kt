@@ -11,12 +11,10 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import co.orange.core.R
-import co.orange.core.amplitude.AmplitudeManager
 import co.orange.core.base.BaseActivity
 import co.orange.core.extension.setOnSingleClickListener
 import co.orange.core.extension.stringOf
 import co.orange.core.extension.toast
-import co.orange.core.navigation.NavigationManager
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.SellBuyerInfoModel
 import co.orange.sell.databinding.ActivitySellConfirmBinding
@@ -24,16 +22,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 import co.orange.sell.R as featureR
 
 @AndroidEntryPoint
 class SellConfirmActivity :
     BaseActivity<ActivitySellConfirmBinding>(featureR.layout.activity_sell_confirm) {
-    @Inject
-    lateinit var navigationManager: NavigationManager
 
     private val viewModel by viewModels<SellConfirmViewModel>()
+
+    private var sellConfirmDialog: SellConfirmDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +40,6 @@ class SellConfirmActivity :
         initConfirmBtnListener()
         getIntentInfo()
         observeGetBuyerInfoState()
-        observePatchOrderConfirmState()
     }
 
     private fun initBackBtnListener() {
@@ -60,7 +56,8 @@ class SellConfirmActivity :
 
     private fun initConfirmBtnListener() {
         binding.btnConfirm.setOnSingleClickListener {
-            viewModel.patchOrderConfirmToServer()
+            sellConfirmDialog = SellConfirmDialog()
+            sellConfirmDialog?.show(supportFragmentManager, DIALOG_CONFIRM)
         }
     }
 
@@ -117,23 +114,9 @@ class SellConfirmActivity :
         clipboardManager.setPrimaryClip(ClipData.newPlainText(CLIP_LABEL, text))
     }
 
-    private fun observePatchOrderConfirmState() {
-        viewModel.patchOrderConfirmState.flowWithLifecycle(lifecycle).distinctUntilChanged()
-            .onEach { state ->
-                when (state) {
-                    is UiState.Success -> {
-                        AmplitudeManager.apply {
-                            plusIntProperty("user_selling_count", 1)
-                            plusIntProperty("user_selling_total", viewModel.totalPrice)
-                        }
-                        toast(stringOf(R.string.sell_order_fix_msg))
-                        navigationManager.toMainViewWIthClearing(this)
-                    }
-
-                    is UiState.Failure -> toast(stringOf(R.string.error_msg))
-                    else -> return@onEach
-                }
-            }.launchIn(lifecycleScope)
+    override fun onDestroy() {
+        super.onDestroy()
+        sellConfirmDialog = null
     }
 
     companion object {
@@ -141,6 +124,7 @@ class SellConfirmActivity :
         private const val EXTRA_TOTAL_PRICE = "EXTRA_TOTAL_PRICE"
 
         private const val CLIP_LABEL = "BUYER_INFO"
+        private const val DIALOG_CONFIRM = "DIALOG_CONFIRM"
 
         const val WEB_TERM_SELL =
             "https://brawny-guan-098.notion.site/6d77260d027148ceb0f806f0911c284a?pvs=4"
