@@ -62,7 +62,7 @@ class SellProgressViewModel
             checkIsCompleted()
         }
 
-        private fun checkIsCompleted() {
+        fun checkIsCompleted() {
             isTermAllSelected.value =
                 (isTermServiceSelected.value == true && isTermSellSelected.value == true)
             isCompleted.value = (isTermAllSelected.value == true && isDateSelected.value == true)

@@ -36,6 +36,7 @@ class SellDateBottomSheet :
             with(viewModel) {
                 sellDate.value = getDateFromDatePicker()
                 isDateSelected.value = true
+                checkIsCompleted()
             }
             dismiss()
         }
