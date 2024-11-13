@@ -10,7 +10,7 @@ import co.orange.domain.entity.response.SignUpModel
 interface AuthRepository {
     suspend fun postReissueTokens(request: ReissueRequestModel): Result<ReissueTokenModel>
 
-    suspend fun postOauthDataToGetToken(request: AuthRequestModel): Result<AuthTokenModel>
+    suspend fun postOauthDataToGetToken(request: AuthRequestModel): AuthTokenModel
 
     suspend fun postToSignUp(
         accesstoken: String,

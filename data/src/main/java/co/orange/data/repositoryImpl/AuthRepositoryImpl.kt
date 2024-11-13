@@ -25,10 +25,8 @@ class AuthRepositoryImpl
                 ).data.toModel()
             }
 
-        override suspend fun postOauthDataToGetToken(request: AuthRequestModel): Result<AuthTokenModel> =
-            runCatching {
+        override suspend fun postOauthDataToGetToken(request: AuthRequestModel): AuthTokenModel =
                 authDataSource.postOauthDataToGetToken(request.toDto()).data.toModel()
-            }
 
         override suspend fun postToSignUp(
             accesstoken: String,

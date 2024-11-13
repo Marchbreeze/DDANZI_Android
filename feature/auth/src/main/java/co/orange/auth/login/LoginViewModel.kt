@@ -7,6 +7,7 @@ import co.orange.core.state.UiState
 import co.orange.domain.entity.request.AuthRequestModel
 import co.orange.domain.repository.AuthRepository
 import co.orange.domain.repository.UserRepository
+import co.orange.domain.usecase.AuthChangeTokenUseCase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
@@ -24,8 +25,7 @@ import javax.inject.Inject
 class LoginViewModel
     @Inject
     constructor(
-        private val authRepository: AuthRepository,
-        private val userRepository: UserRepository,
+        private val authChangeTokenUseCase: AuthChangeTokenUseCase,
     ) : ViewModel() {
         private val _isAppLoginAvailable = MutableStateFlow(true)
         val isAppLoginAvailable: StateFlow<Boolean> = _isAppLoginAvailable
@@ -83,28 +83,13 @@ class LoginViewModel
             fcmToken: String,
         ) {
             viewModelScope.launch {
-                authRepository.postOauthDataToGetToken(
-                    AuthRequestModel(
-                        accessToken,
-                        KAKAO,
-                        userRepository.getDeviceToken(),
-                        ANDROID,
-                        fcmToken,
-                    ),
-                )
+                authChangeTokenUseCase(accessToken, fcmToken)
                     .onSuccess {
-                        userRepository.setTokens(it.accesstoken, it.refreshtoken)
-                        userRepository.setUserStatus(it.status)
-                        _changeTokenState.value = UiState.Success(it.status)
+                        _changeTokenState.value = UiState.Success(it)
                     }
                     .onFailure {
                         _changeTokenState.value = UiState.Failure(it.message.orEmpty())
                     }
             }
-        }
-
-        companion object {
-            const val KAKAO = "KAKAO"
-            const val ANDROID = "ANDROID"
         }
     }
