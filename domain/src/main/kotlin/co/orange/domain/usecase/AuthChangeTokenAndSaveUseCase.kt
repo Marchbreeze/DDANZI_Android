@@ -10,7 +10,7 @@ class AuthChangeTokenAndSaveUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(accessToken: String, fcmToken: String) = runCatching {
-        val authTokenModel = authRepository.postOauthDataToGetToken(
+        val response = authRepository.postOauthDataToGetToken(
             AuthRequestModel(
                 accessToken,
                 KAKAO,
@@ -19,9 +19,9 @@ class AuthChangeTokenAndSaveUseCase @Inject constructor(
                 fcmToken,
             ),
         )
-        userRepository.setTokens(authTokenModel.accesstoken, authTokenModel.refreshtoken)
-        userRepository.setUserStatus(authTokenModel.status)
-        return@runCatching authTokenModel.status
+        userRepository.setTokens(response.accesstoken, response.refreshtoken)
+        userRepository.setUserStatus(response.status)
+        return@runCatching response.status
     }
 
     companion object {

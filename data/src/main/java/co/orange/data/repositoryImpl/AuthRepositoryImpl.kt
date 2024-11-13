@@ -18,12 +18,10 @@ class AuthRepositoryImpl
 constructor(
     private val authDataSource: AuthDataSource,
 ) : AuthRepository {
-    override suspend fun postReissueTokens(request: ReissueRequestModel): Result<ReissueTokenModel> =
-        runCatching {
-            authDataSource.postReissueTokens(
-                request.toDto(),
-            ).data.toModel()
-        }
+    override suspend fun postReissueTokens(request: ReissueRequestModel): ReissueTokenModel =
+        authDataSource.postReissueTokens(
+            request.toDto(),
+        ).data.toModel()
 
     override suspend fun postOauthDataToGetToken(request: AuthRequestModel): AuthTokenModel =
         authDataSource.postOauthDataToGetToken(request.toDto()).data.toModel()

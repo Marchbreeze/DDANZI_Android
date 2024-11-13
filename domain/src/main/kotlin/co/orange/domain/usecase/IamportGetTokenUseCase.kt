@@ -8,9 +8,9 @@ class IamportGetTokenUseCase @Inject constructor(
     private val iamportRepository: IamportRepository,
 ) {
     suspend operator fun invoke(certificatedUid: String) = runCatching {
-        val authTokenModel: IamportTokenModel? = iamportRepository.postToGetIamportToken()
-        if (certificatedUid.isNotBlank() && authTokenModel != null) {
-            return@runCatching authTokenModel.accessToken
+        val response: IamportTokenModel? = iamportRepository.postToGetIamportToken()
+        if (certificatedUid.isNotBlank() && response != null) {
+            return@runCatching response.accessToken
         } else {
             throw IllegalArgumentException()
         }

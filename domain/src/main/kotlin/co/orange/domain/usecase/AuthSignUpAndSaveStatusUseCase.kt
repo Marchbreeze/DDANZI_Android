@@ -11,19 +11,19 @@ class AuthSignUpAndSaveStatusUseCase @Inject constructor(
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(
-        response: IamportCertificationModel,
+        iamportCertificationModel: IamportCertificationModel,
         isTermMarketingSelected: Boolean?
     ) = runCatching {
         val request = SignUpRequestModel(
-            name = response.name.orEmpty(),
-            phone = response.phone.orEmpty(),
-            birth = response.birthday.orEmpty(),
-            sex = response.gender?.uppercase().orEmpty(),
+            name = iamportCertificationModel.name.orEmpty(),
+            phone = iamportCertificationModel.phone.orEmpty(),
+            birth = iamportCertificationModel.birthday.orEmpty(),
+            sex = iamportCertificationModel.gender?.uppercase().orEmpty(),
             isAgreedMarketingTerm = isTermMarketingSelected ?: false,
-            ci = response.uniqueKey.orEmpty(),
+            ci = iamportCertificationModel.uniqueKey.orEmpty(),
         )
-        val signUpModel = authRepository.postToSignUp(userRepository.getAccessToken(), request)
-        userRepository.setUserStatus(signUpModel.status)
-        return@runCatching signUpModel
+        val response = authRepository.postToSignUp(userRepository.getAccessToken(), request)
+        userRepository.setUserStatus(response.status)
+        return@runCatching response
     }
 }

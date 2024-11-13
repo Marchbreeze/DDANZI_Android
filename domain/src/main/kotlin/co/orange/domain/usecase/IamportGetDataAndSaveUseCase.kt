@@ -10,14 +10,14 @@ class IamportGetDataAndSaveUseCase @Inject constructor(
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(accessToken: String, certificatedUid: String) = runCatching {
-        val authCertificationModel: IamportCertificationModel? =
+        val response: IamportCertificationModel? =
             iamportRepository.getIamportCertificationData(accessToken, certificatedUid)
-        if (authCertificationModel != null) {
+        if (response != null) {
             userRepository.setUserInfo(
-                userName = authCertificationModel.name.orEmpty(),
-                userPhone = authCertificationModel.phone?.toPhoneFrom().orEmpty(),
+                userName = response.name.orEmpty(),
+                userPhone = response.phone?.toPhoneFrom().orEmpty(),
             )
-            return@runCatching authCertificationModel
+            return@runCatching response
         } else {
             throw IllegalArgumentException()
         }
