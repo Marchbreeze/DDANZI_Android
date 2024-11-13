@@ -23,15 +23,13 @@ constructor(
         ).response?.toModel()
 
     override suspend fun getIamportCertificationData(
-        authorization: String,
+        accessToken: String,
         impUid: String,
-    ): Result<IamportCertificationModel?> =
-        runCatching {
-            iamportDataSource.getIamportCertificationData(
-                "$BEARER $authorization",
-                impUid,
-            ).response?.toModel()
-        }
+    ): IamportCertificationModel? =
+        iamportDataSource.getIamportCertificationData(
+            "$BEARER $accessToken",
+            impUid,
+        ).response?.toModel()
 
     companion object {
         private const val BEARER = "Bearer"

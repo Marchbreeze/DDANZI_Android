@@ -7,7 +7,7 @@ interface IamportRepository {
     suspend fun postToGetIamportToken(): IamportTokenModel?
 
     suspend fun getIamportCertificationData(
-        authorization: String,
+        accessToken: String,
         impUid: String,
-    ): Result<IamportCertificationModel?>
+    ): IamportCertificationModel?
 }

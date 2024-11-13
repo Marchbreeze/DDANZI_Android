@@ -11,6 +11,7 @@ import co.orange.domain.entity.response.IamportCertificationModel
 import co.orange.domain.repository.AuthRepository
 import co.orange.domain.repository.IamportRepository
 import co.orange.domain.repository.UserRepository
+import co.orange.domain.usecase.IamportGetDataUseCase
 import co.orange.domain.usecase.IamportGetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,7 +32,8 @@ constructor(
     private val authRepository: AuthRepository,
     private val iamportRepository: IamportRepository,
     private val userRepository: UserRepository,
-    private val iamportGetTokenUseCase: IamportGetTokenUseCase
+    private val iamportGetTokenUseCase: IamportGetTokenUseCase,
+    private val iamportGetDataUseCase: IamportGetDataUseCase,
 ) : ViewModel() {
     var certificatedUid: String = ""
 
@@ -101,28 +103,24 @@ constructor(
 
     private fun getCertificationDataFromServer(accessToken: String) {
         viewModelScope.launch {
-            iamportRepository.getIamportCertificationData(accessToken, certificatedUid)
+            iamportGetDataUseCase(accessToken, certificatedUid)
                 .onSuccess { response ->
-                    if (response != null) {
-                        _getIamportDataResult.emit(true)
-                        postToSignUpFromServer(
-                            SignUpRequestModel(
-                                name = response.name.orEmpty(),
-                                phone = response.phone.orEmpty(),
-                                birth = response.birthday.orEmpty(),
-                                sex = response.gender?.uppercase().orEmpty(),
-                                isAgreedMarketingTerm = isTermMarketingSelected.value ?: false,
-                                ci = response.uniqueKey.orEmpty(),
-                            ),
-                        )
-                        userRepository.setUserInfo(
-                            userName = response.name.orEmpty(),
-                            userPhone = response.phone?.toPhoneFrom().orEmpty(),
-                        )
-                        setAmplitudeUserProperty(response)
-                    } else {
-                        _getIamportDataResult.emit(false)
-                    }
+                    _getIamportDataResult.emit(true)
+                    postToSignUpFromServer(
+                        SignUpRequestModel(
+                            name = response.name.orEmpty(),
+                            phone = response.phone.orEmpty(),
+                            birth = response.birthday.orEmpty(),
+                            sex = response.gender?.uppercase().orEmpty(),
+                            isAgreedMarketingTerm = isTermMarketingSelected.value ?: false,
+                            ci = response.uniqueKey.orEmpty(),
+                        ),
+                    )
+                    userRepository.setUserInfo(
+                        userName = response.name.orEmpty(),
+                        userPhone = response.phone?.toPhoneFrom().orEmpty(),
+                    )
+                    setAmplitudeUserProperty(response)
                 }
                 .onFailure {
                     _getIamportDataResult.emit(false)
