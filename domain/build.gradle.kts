@@ -15,5 +15,7 @@ dependencies {
         implementation(coroutines)
         implementation(dateTime)
     }
+    JavaDependencies.run {
+        implementation(javaxInject)
+    }
 }
-

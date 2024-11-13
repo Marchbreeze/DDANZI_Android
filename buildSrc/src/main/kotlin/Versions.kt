@@ -7,6 +7,7 @@ object Versions {
     const val kotlinSerializationJsonVersion = "1.5.1"
     const val kotlinDateTimeVersion = "0.4.0"
     const val coreKtxVersion = "1.10.1"
+    const val javaxInjectVersion = "1"
     const val appCompatVersion = "1.6.1"
     const val materialDesignVersion = "1.9.0"
     const val constraintLayoutVersion = "2.1.4"

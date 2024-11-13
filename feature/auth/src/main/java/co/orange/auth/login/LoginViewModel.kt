@@ -4,10 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.state.UiState
-import co.orange.domain.entity.request.AuthRequestModel
-import co.orange.domain.repository.AuthRepository
-import co.orange.domain.repository.UserRepository
-import co.orange.domain.usecase.AuthChangeTokenUseCase
+import co.orange.domain.usecase.AuthChangeTokenAndSaveUseCase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
@@ -25,7 +22,7 @@ import javax.inject.Inject
 class LoginViewModel
     @Inject
     constructor(
-        private val authChangeTokenUseCase: AuthChangeTokenUseCase,
+        private val authChangeTokenAndSaveUseCase: AuthChangeTokenAndSaveUseCase,
     ) : ViewModel() {
         private val _isAppLoginAvailable = MutableStateFlow(true)
         val isAppLoginAvailable: StateFlow<Boolean> = _isAppLoginAvailable
@@ -83,7 +80,7 @@ class LoginViewModel
             fcmToken: String,
         ) {
             viewModelScope.launch {
-                authChangeTokenUseCase(accessToken, fcmToken)
+                authChangeTokenAndSaveUseCase(accessToken, fcmToken)
                     .onSuccess {
                         _changeTokenState.value = UiState.Success(it)
                     }

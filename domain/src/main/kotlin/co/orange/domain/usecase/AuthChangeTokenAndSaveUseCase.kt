@@ -3,8 +3,9 @@ package co.orange.domain.usecase
 import co.orange.domain.entity.request.AuthRequestModel
 import co.orange.domain.repository.AuthRepository
 import co.orange.domain.repository.UserRepository
+import javax.inject.Inject
 
-class AuthChangeTokenUseCase(
+class AuthChangeTokenAndSaveUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository
 ) {
