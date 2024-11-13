@@ -101,10 +101,6 @@ class PhoneActivity : BaseActivity<ActivityPhoneBinding>(featureR.layout.activit
             .onEach { state ->
                 when (state) {
                     is UiState.Success -> {
-                        AmplitudeManager.apply {
-                            trackEvent("complete_sign_up")
-                            updateProperty("user_id", state.data)
-                        }
                         setLoadingScreen(false)
                         startActivity(SubmitActivity.createIntent(this, state.data))
                         finish()

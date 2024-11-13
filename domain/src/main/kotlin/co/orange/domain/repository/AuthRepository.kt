@@ -15,7 +15,7 @@ interface AuthRepository {
     suspend fun postToSignUp(
         accesstoken: String,
         request: SignUpRequestModel,
-    ): Result<SignUpModel>
+    ): SignUpModel
 
     suspend fun getServerStatus(): Result<Boolean>
 }

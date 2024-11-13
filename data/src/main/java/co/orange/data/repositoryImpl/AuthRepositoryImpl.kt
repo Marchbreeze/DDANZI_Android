@@ -31,13 +31,11 @@ constructor(
     override suspend fun postToSignUp(
         accesstoken: String,
         request: SignUpRequestModel,
-    ): Result<SignUpModel> =
-        runCatching {
-            authDataSource.postToSignUp(
-                "$BEARER $accesstoken",
-                request.toDto(),
-            ).data.toModel()
-        }
+    ): SignUpModel =
+        authDataSource.postToSignUp(
+            "$BEARER $accesstoken",
+            request.toDto(),
+        ).data.toModel()
 
     override suspend fun getServerStatus(): Result<Boolean> =
         runCatching {

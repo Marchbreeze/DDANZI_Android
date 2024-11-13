@@ -4,14 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.amplitude.AmplitudeManager
-import co.orange.core.extension.toPhoneFrom
 import co.orange.core.state.UiState
-import co.orange.domain.entity.request.SignUpRequestModel
 import co.orange.domain.entity.response.IamportCertificationModel
-import co.orange.domain.repository.AuthRepository
-import co.orange.domain.repository.IamportRepository
-import co.orange.domain.repository.UserRepository
-import co.orange.domain.usecase.IamportGetDataUseCase
+import co.orange.domain.usecase.AuthSignUpAndSaveStatusUseCase
+import co.orange.domain.usecase.IamportGetDataAndSaveUseCase
 import co.orange.domain.usecase.IamportGetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,11 +25,9 @@ import javax.inject.Inject
 class PhoneViewModel
 @Inject
 constructor(
-    private val authRepository: AuthRepository,
-    private val iamportRepository: IamportRepository,
-    private val userRepository: UserRepository,
     private val iamportGetTokenUseCase: IamportGetTokenUseCase,
-    private val iamportGetDataUseCase: IamportGetDataUseCase,
+    private val iamportGetDataAndSaveUseCase: IamportGetDataAndSaveUseCase,
+    private val authSignUpAndSaveStatusUseCase: AuthSignUpAndSaveStatusUseCase,
 ) : ViewModel() {
     var certificatedUid: String = ""
 
@@ -103,23 +97,10 @@ constructor(
 
     private fun getCertificationDataFromServer(accessToken: String) {
         viewModelScope.launch {
-            iamportGetDataUseCase(accessToken, certificatedUid)
+            iamportGetDataAndSaveUseCase(accessToken, certificatedUid)
                 .onSuccess { response ->
                     _getIamportDataResult.emit(true)
-                    postToSignUpFromServer(
-                        SignUpRequestModel(
-                            name = response.name.orEmpty(),
-                            phone = response.phone.orEmpty(),
-                            birth = response.birthday.orEmpty(),
-                            sex = response.gender?.uppercase().orEmpty(),
-                            isAgreedMarketingTerm = isTermMarketingSelected.value ?: false,
-                            ci = response.uniqueKey.orEmpty(),
-                        ),
-                    )
-                    userRepository.setUserInfo(
-                        userName = response.name.orEmpty(),
-                        userPhone = response.phone?.toPhoneFrom().orEmpty(),
-                    )
+                    postToSignUpFromServer(response, isTermMarketingSelected.value)
                     setAmplitudeUserProperty(response)
                 }
                 .onFailure {
@@ -128,11 +109,17 @@ constructor(
         }
     }
 
-    private fun postToSignUpFromServer(request: SignUpRequestModel) {
+    private fun postToSignUpFromServer(
+        response: IamportCertificationModel,
+        isTermMarketingSelected: Boolean?
+    ) {
         viewModelScope.launch {
-            authRepository.postToSignUp(userRepository.getAccessToken(), request)
+            authSignUpAndSaveStatusUseCase(response, isTermMarketingSelected)
                 .onSuccess {
-                    userRepository.setUserStatus(it.status)
+                    AmplitudeManager.apply {
+                        trackEvent("complete_sign_up")
+                        updateProperty("user_id", it.nickname)
+                    }
                     _postSignUpState.value = UiState.Success(it.nickname)
                 }
                 .onFailure {
