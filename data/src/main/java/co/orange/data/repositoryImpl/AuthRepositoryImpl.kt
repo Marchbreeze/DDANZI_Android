@@ -14,37 +14,37 @@ import co.orange.domain.repository.AuthRepository
 import javax.inject.Inject
 
 class AuthRepositoryImpl
-    @Inject
-    constructor(
-        private val authDataSource: AuthDataSource,
-    ) : AuthRepository {
-        override suspend fun postReissueTokens(request: ReissueRequestModel): Result<ReissueTokenModel> =
-            runCatching {
-                authDataSource.postReissueTokens(
-                    request.toDto(),
-                ).data.toModel()
-            }
-
-        override suspend fun postOauthDataToGetToken(request: AuthRequestModel): AuthTokenModel =
-                authDataSource.postOauthDataToGetToken(request.toDto()).data.toModel()
-
-        override suspend fun postToSignUp(
-            accesstoken: String,
-            request: SignUpRequestModel,
-        ): Result<SignUpModel> =
-            runCatching {
-                authDataSource.postToSignUp(
-                    "$BEARER $accesstoken",
-                    request.toDto(),
-                ).data.toModel()
-            }
-
-        override suspend fun getServerStatus(): Result<Boolean> =
-            runCatching {
-                authDataSource.getServerStatus().data
-            }
-
-        companion object {
-            private const val BEARER = "Bearer"
+@Inject
+constructor(
+    private val authDataSource: AuthDataSource,
+) : AuthRepository {
+    override suspend fun postReissueTokens(request: ReissueRequestModel): Result<ReissueTokenModel> =
+        runCatching {
+            authDataSource.postReissueTokens(
+                request.toDto(),
+            ).data.toModel()
         }
+
+    override suspend fun postOauthDataToGetToken(request: AuthRequestModel): AuthTokenModel =
+        authDataSource.postOauthDataToGetToken(request.toDto()).data.toModel()
+
+    override suspend fun postToSignUp(
+        accesstoken: String,
+        request: SignUpRequestModel,
+    ): Result<SignUpModel> =
+        runCatching {
+            authDataSource.postToSignUp(
+                "$BEARER $accesstoken",
+                request.toDto(),
+            ).data.toModel()
+        }
+
+    override suspend fun getServerStatus(): Result<Boolean> =
+        runCatching {
+            authDataSource.getServerStatus().data
+        }
+
+    companion object {
+        private const val BEARER = "Bearer"
     }
+}

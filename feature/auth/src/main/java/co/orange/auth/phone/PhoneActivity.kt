@@ -22,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import timber.log.Timber
 import java.util.Date
 import co.orange.auth.R as featureR
 
@@ -38,8 +37,7 @@ class PhoneActivity : BaseActivity<ActivityPhoneBinding>(featureR.layout.activit
         initView()
         initAuthBtnListener()
         observeIsSubmitClicked()
-        observeIamportTokenResult()
-        observeIamportCertificationResult()
+        observeIamportDataResult()
         observeSignUpState()
     }
 
@@ -68,7 +66,6 @@ class PhoneActivity : BaseActivity<ActivityPhoneBinding>(featureR.layout.activit
     }
 
     private fun startIamportCertification() {
-        Timber.tag("okhttp").d("START IAMPORT CERTIFICATION")
         Iamport.certification(
             userCode = IAMPORT_CODE,
             iamPortCertification =
@@ -83,25 +80,14 @@ class PhoneActivity : BaseActivity<ActivityPhoneBinding>(featureR.layout.activit
                     postToGetIamportTokenFromServer()
                 }
             } else {
-                Timber.tag("okhttp").d("IAMPORT CERTIFICATION ERROR : $response")
                 toast(stringOf(R.string.error_msg))
                 setLoadingScreen(false)
             }
         }
     }
 
-    private fun observeIamportTokenResult() {
-        viewModel.getIamportTokenResult.flowWithLifecycle(lifecycle).distinctUntilChanged()
-            .onEach { isSuccess ->
-                if (!isSuccess) {
-                    toast(stringOf(R.string.error_msg))
-                    setLoadingScreen(false)
-                }
-            }.launchIn(lifecycleScope)
-    }
-
-    private fun observeIamportCertificationResult() {
-        viewModel.getIamportCertificationResult.flowWithLifecycle(lifecycle).distinctUntilChanged()
+    private fun observeIamportDataResult() {
+        viewModel.getIamportDataResult.flowWithLifecycle(lifecycle).distinctUntilChanged()
             .onEach { isSuccess ->
                 if (!isSuccess) {
                     toast(stringOf(R.string.error_msg))

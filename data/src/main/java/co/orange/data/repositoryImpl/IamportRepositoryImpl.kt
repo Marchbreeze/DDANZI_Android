@@ -10,32 +10,30 @@ import co.orange.domain.repository.IamportRepository
 import javax.inject.Inject
 
 class IamportRepositoryImpl
-    @Inject
-    constructor(
-        private val iamportDataSource: IamportDataSource,
-    ) : IamportRepository {
-        override suspend fun postToGetIamportToken(): Result<IamportTokenModel?> =
-            runCatching {
-                iamportDataSource.postToGetIamportToken(
-                    IamportTokenRequestDto(
-                        IAMPORT_API_KEY,
-                        IAMPORT_API_SECRET,
-                    ),
-                ).response?.toModel()
-            }
+@Inject
+constructor(
+    private val iamportDataSource: IamportDataSource,
+) : IamportRepository {
+    override suspend fun postToGetIamportToken(): IamportTokenModel? =
+        iamportDataSource.postToGetIamportToken(
+            IamportTokenRequestDto(
+                IAMPORT_API_KEY,
+                IAMPORT_API_SECRET,
+            ),
+        ).response?.toModel()
 
-        override suspend fun getIamportCertificationData(
-            authorization: String,
-            impUid: String,
-        ): Result<IamportCertificationModel?> =
-            runCatching {
-                iamportDataSource.getIamportCertificationData(
-                    "$BEARER $authorization",
-                    impUid,
-                ).response?.toModel()
-            }
-
-        companion object {
-            private const val BEARER = "Bearer"
+    override suspend fun getIamportCertificationData(
+        authorization: String,
+        impUid: String,
+    ): Result<IamportCertificationModel?> =
+        runCatching {
+            iamportDataSource.getIamportCertificationData(
+                "$BEARER $authorization",
+                impUid,
+            ).response?.toModel()
         }
+
+    companion object {
+        private const val BEARER = "Bearer"
     }
+}
