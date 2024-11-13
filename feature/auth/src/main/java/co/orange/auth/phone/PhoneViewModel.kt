@@ -4,20 +4,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.amplitude.AmplitudeManager
-import co.orange.core.extension.toPhoneFrom
 import co.orange.core.state.UiState
-import co.orange.domain.entity.request.SignUpRequestModel
 import co.orange.domain.entity.response.IamportCertificationModel
-import co.orange.domain.repository.AuthRepository
-import co.orange.domain.repository.IamportRepository
-import co.orange.domain.repository.UserRepository
+import co.orange.domain.usecase.AuthSignUpAndSaveStatusUseCase
+import co.orange.domain.usecase.IamportGetDataAndSaveUseCase
+import co.orange.domain.usecase.IamportGetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Period
@@ -26,158 +23,138 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhoneViewModel
-    @Inject
-    constructor(
-        private val authRepository: AuthRepository,
-        private val iamportRepository: IamportRepository,
-        private val userRepository: UserRepository,
-    ) : ViewModel() {
-        var certificatedUid: String = ""
+@Inject
+constructor(
+    private val iamportGetTokenUseCase: IamportGetTokenUseCase,
+    private val iamportGetDataAndSaveUseCase: IamportGetDataAndSaveUseCase,
+    private val authSignUpAndSaveStatusUseCase: AuthSignUpAndSaveStatusUseCase,
+) : ViewModel() {
+    var certificatedUid: String = ""
 
-        var isTermAllSelected = MutableLiveData<Boolean>(false)
-        var isTermPrivateSelected = MutableLiveData<Boolean>(false)
-        var isTermServiceSelected = MutableLiveData<Boolean>(false)
-        var isTermMarketingSelected = MutableLiveData<Boolean>(false)
-        var isCompleted = MutableLiveData<Boolean>(false)
+    var isTermAllSelected = MutableLiveData<Boolean>(false)
+    var isTermPrivateSelected = MutableLiveData<Boolean>(false)
+    var isTermServiceSelected = MutableLiveData<Boolean>(false)
+    var isTermMarketingSelected = MutableLiveData<Boolean>(false)
+    var isCompleted = MutableLiveData<Boolean>(false)
 
-        private val _isSubmitClicked = MutableSharedFlow<Boolean>()
-        val isSubmitClicked: SharedFlow<Boolean> = _isSubmitClicked
+    private val _isSubmitClicked = MutableSharedFlow<Boolean>()
+    val isSubmitClicked: SharedFlow<Boolean> = _isSubmitClicked
 
-        private val _getIamportTokenResult = MutableSharedFlow<Boolean>()
-        val getIamportTokenResult: SharedFlow<Boolean> = _getIamportTokenResult
+    private val _getIamportDataResult = MutableSharedFlow<Boolean>()
+    val getIamportDataResult: SharedFlow<Boolean> = _getIamportDataResult
 
-        private val _getIamportCertificationResult = MutableSharedFlow<Boolean>()
-        val getIamportCertificationResult: SharedFlow<Boolean> = _getIamportCertificationResult
+    private val _postSignUpState = MutableStateFlow<UiState<String>>(UiState.Empty)
+    val postSignUpState: StateFlow<UiState<String>> = _postSignUpState
 
-        private val _postSignUpState = MutableStateFlow<UiState<String>>(UiState.Empty)
-        val postSignUpState: StateFlow<UiState<String>> = _postSignUpState
-
-        fun checkAllTerm() {
-            AmplitudeManager.trackEvent("click_verification_terms_all")
-            isTermPrivateSelected.value = isTermAllSelected.value?.not()
-            isTermServiceSelected.value = isTermAllSelected.value?.not()
-            isTermMarketingSelected.value = isTermAllSelected.value?.not()
-            isTermAllSelected.value = isTermAllSelected.value?.not()
-            checkIsCompleted()
-        }
-
-        fun checkPrivateTerm() {
-            isTermPrivateSelected.value = isTermPrivateSelected.value?.not()
-            checkIsCompleted()
-        }
-
-        fun checkServiceTerm() {
-            isTermServiceSelected.value = isTermServiceSelected.value?.not()
-            checkIsCompleted()
-        }
-
-        fun checkMarketingTerm() {
-            isTermMarketingSelected.value = isTermMarketingSelected.value?.not()
-            checkIsCompleted()
-        }
-
-        private fun checkIsCompleted() {
-            isCompleted.value =
-                (isTermPrivateSelected.value == true && isTermServiceSelected.value == true)
-            isTermAllSelected.value =
-                (isTermPrivateSelected.value == true && isTermServiceSelected.value == true && isTermMarketingSelected.value == true)
-        }
-
-        fun clickSubmitBtn(boolean: Boolean) {
-            viewModelScope.launch {
-                _isSubmitClicked.emit(boolean)
-            }
-        }
-
-        fun postToGetIamportTokenFromServer() {
-            viewModelScope.launch {
-                iamportRepository.postToGetIamportToken()
-                    .onSuccess {
-                        if (it?.accessToken != null && certificatedUid.isNotBlank()) {
-                            getCertificationDataFromServer(it.accessToken)
-                        } else {
-                            _getIamportTokenResult.emit(false)
-                        }
-                    }
-                    .onFailure {
-                        Timber.tag("okhttp").d("IAMPORT TOKEN ERROR : $it")
-                        _getIamportTokenResult.emit(false)
-                    }
-            }
-        }
-
-        private fun getCertificationDataFromServer(accessToken: String) {
-            viewModelScope.launch {
-                iamportRepository.getIamportCertificationData(accessToken, certificatedUid)
-                    .onSuccess { response ->
-                        if (response != null) {
-                            _getIamportCertificationResult.emit(true)
-                            postToSignUpFromServer(
-                                SignUpRequestModel(
-                                    name = response.name.orEmpty(),
-                                    phone = response.phone.orEmpty(),
-                                    birth = response.birthday.orEmpty(),
-                                    sex = response.gender?.uppercase().orEmpty(),
-                                    isAgreedMarketingTerm = isTermMarketingSelected.value ?: false,
-                                    ci = response.uniqueKey.orEmpty(),
-                                ),
-                            )
-                            userRepository.setUserInfo(
-                                userName = response.name.orEmpty(),
-                                userPhone = response.phone?.toPhoneFrom().orEmpty(),
-                            )
-                            setAmplitudeUserProperty(response)
-                        } else {
-                            _getIamportCertificationResult.emit(false)
-                        }
-                    }
-                    .onFailure {
-                        Timber.tag("okhttp").d("IAMPORT DATA ERROR : $it")
-                        _getIamportCertificationResult.emit(false)
-                    }
-            }
-        }
-
-        private fun postToSignUpFromServer(request: SignUpRequestModel) {
-            viewModelScope.launch {
-                authRepository.postToSignUp(userRepository.getAccessToken(), request)
-                    .onSuccess {
-                        userRepository.setUserStatus(it.status)
-                        _postSignUpState.value = UiState.Success(it.nickname)
-                    }
-                    .onFailure {
-                        _postSignUpState.value = UiState.Failure(it.message.orEmpty())
-                    }
-            }
-        }
-
-        private fun setAmplitudeUserProperty(item: IamportCertificationModel) {
-            AmplitudeManager.apply {
-                updateProperty("user_sex", item.gender?.uppercase().orEmpty())
-                updateProperty("user_name", item.name.orEmpty())
-                item.birthday?.let { birthday ->
-                    updateProperty("user_birthday", birthday.convertOnlyDate())
-                    updateIntProperty("user_age", birthday.convertToAge())
-                }
-                updateProperty(
-                    "user_signup_date",
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                )
-                updateIntProperty("user_purchase_count", 0)
-                updateIntProperty("user_purchase_total", 0)
-                updateIntProperty("user_selling_try", 0)
-                updateIntProperty("user_selling_count", 0)
-                updateIntProperty("user_selling_total", 0)
-            }
-        }
-
-        private fun String.convertOnlyDate(): String =
-            LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                .format(DateTimeFormatter.ofPattern("MMdd"))
-
-        private fun String.convertToAge(): Int =
-            Period.between(
-                LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                LocalDate.now(),
-            ).years + 1
+    fun checkAllTerm() {
+        AmplitudeManager.trackEvent("click_verification_terms_all")
+        isTermPrivateSelected.value = isTermAllSelected.value?.not()
+        isTermServiceSelected.value = isTermAllSelected.value?.not()
+        isTermMarketingSelected.value = isTermAllSelected.value?.not()
+        isTermAllSelected.value = isTermAllSelected.value?.not()
+        checkIsCompleted()
     }
+
+    fun checkPrivateTerm() {
+        isTermPrivateSelected.value = isTermPrivateSelected.value?.not()
+        checkIsCompleted()
+    }
+
+    fun checkServiceTerm() {
+        isTermServiceSelected.value = isTermServiceSelected.value?.not()
+        checkIsCompleted()
+    }
+
+    fun checkMarketingTerm() {
+        isTermMarketingSelected.value = isTermMarketingSelected.value?.not()
+        checkIsCompleted()
+    }
+
+    private fun checkIsCompleted() {
+        isCompleted.value =
+            (isTermPrivateSelected.value == true && isTermServiceSelected.value == true)
+        isTermAllSelected.value =
+            (isTermPrivateSelected.value == true && isTermServiceSelected.value == true && isTermMarketingSelected.value == true)
+    }
+
+    fun clickSubmitBtn(boolean: Boolean) {
+        viewModelScope.launch {
+            _isSubmitClicked.emit(boolean)
+        }
+    }
+
+    fun postToGetIamportTokenFromServer() {
+        viewModelScope.launch {
+            iamportGetTokenUseCase(certificatedUid)
+                .onSuccess { token ->
+                    getCertificationDataFromServer(token)
+                }
+                .onFailure {
+                    _getIamportDataResult.emit(false)
+                }
+        }
+    }
+
+    private fun getCertificationDataFromServer(accessToken: String) {
+        viewModelScope.launch {
+            iamportGetDataAndSaveUseCase(accessToken, certificatedUid)
+                .onSuccess { response ->
+                    _getIamportDataResult.emit(true)
+                    postToSignUpFromServer(response, isTermMarketingSelected.value)
+                    setAmplitudeUserProperty(response)
+                }
+                .onFailure {
+                    _getIamportDataResult.emit(false)
+                }
+        }
+    }
+
+    private fun postToSignUpFromServer(
+        response: IamportCertificationModel,
+        isTermMarketingSelected: Boolean?
+    ) {
+        viewModelScope.launch {
+            authSignUpAndSaveStatusUseCase(response, isTermMarketingSelected)
+                .onSuccess {
+                    AmplitudeManager.apply {
+                        trackEvent("complete_sign_up")
+                        updateProperty("user_id", it.nickname)
+                    }
+                    _postSignUpState.value = UiState.Success(it.nickname)
+                }
+                .onFailure {
+                    _postSignUpState.value = UiState.Failure(it.message.orEmpty())
+                }
+        }
+    }
+
+    private fun setAmplitudeUserProperty(item: IamportCertificationModel) {
+        AmplitudeManager.apply {
+            updateProperty("user_sex", item.gender?.uppercase().orEmpty())
+            updateProperty("user_name", item.name.orEmpty())
+            item.birthday?.let { birthday ->
+                updateProperty("user_birthday", birthday.convertOnlyDate())
+                updateIntProperty("user_age", birthday.convertToAge())
+            }
+            updateProperty(
+                "user_signup_date",
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+            )
+            updateIntProperty("user_purchase_count", 0)
+            updateIntProperty("user_purchase_total", 0)
+            updateIntProperty("user_selling_try", 0)
+            updateIntProperty("user_selling_count", 0)
+            updateIntProperty("user_selling_total", 0)
+        }
+    }
+
+    private fun String.convertOnlyDate(): String =
+        LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+            .format(DateTimeFormatter.ofPattern("MMdd"))
+
+    private fun String.convertToAge(): Int =
+        Period.between(
+            LocalDate.parse(this, DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+            LocalDate.now(),
+        ).years + 1
+}

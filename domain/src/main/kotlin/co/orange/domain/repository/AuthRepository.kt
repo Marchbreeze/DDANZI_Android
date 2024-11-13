@@ -8,14 +8,14 @@ import co.orange.domain.entity.response.ReissueTokenModel
 import co.orange.domain.entity.response.SignUpModel
 
 interface AuthRepository {
-    suspend fun postReissueTokens(request: ReissueRequestModel): Result<ReissueTokenModel>
+    suspend fun postReissueTokens(request: ReissueRequestModel): ReissueTokenModel
 
-    suspend fun postOauthDataToGetToken(request: AuthRequestModel): Result<AuthTokenModel>
+    suspend fun postOauthDataToGetToken(request: AuthRequestModel): AuthTokenModel
 
     suspend fun postToSignUp(
         accesstoken: String,
         request: SignUpRequestModel,
-    ): Result<SignUpModel>
+    ): SignUpModel
 
     suspend fun getServerStatus(): Result<Boolean>
 }
