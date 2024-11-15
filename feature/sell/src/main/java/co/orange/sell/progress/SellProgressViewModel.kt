@@ -7,7 +7,7 @@ import co.orange.core.amplitude.AmplitudeManager
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.SellProductModel
 import co.orange.domain.entity.response.SellRegisteredModel
-import co.orange.domain.usecase.sell.GetSellProductInfoUseCase
+import co.orange.domain.usecase.sell.GetSellProcessInfoUseCase
 import co.orange.domain.usecase.sell.RegisterSellProductUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class SellProgressViewModel
 @Inject
 constructor(
-    private val getSellProductInfoUseCase: GetSellProductInfoUseCase,
+    private val getSellProcessInfoUseCase: GetSellProcessInfoUseCase,
     private val registerSellProductUseCase: RegisterSellProductUseCase
 ) : ViewModel() {
     var productId = ""
@@ -72,7 +72,7 @@ constructor(
     fun getProductWIthId() {
         _getProductState.value = UiState.Loading
         viewModelScope.launch {
-            getSellProductInfoUseCase(productId)
+            getSellProcessInfoUseCase(productId)
                 .onSuccess {
                     isBankExist = it.isAccountExist
                     if (isSentToBank) {
