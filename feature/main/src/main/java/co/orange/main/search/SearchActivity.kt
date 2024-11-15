@@ -62,8 +62,7 @@ class SearchActivity :
         setDebounceSearch()
         observeGetSearchViewInfoState()
         observeGetSearchResultState()
-        observeItemLikePlusState()
-        observeItemLikeMinusState()
+        observeLikeState()
     }
 
     override fun onResume() {
@@ -198,48 +197,23 @@ class SearchActivity :
             }.launchIn(lifecycleScope)
     }
 
-    private fun observeItemLikePlusState() {
-        viewModel.itemLikePlusState.flowWithLifecycle(lifecycle).distinctUntilChanged()
-            .onEach { state ->
-                when (state) {
-                    is UiState.Success -> {
-                        if (viewModel.currentKeyword.isEmpty()) {
-                            recentAdapter.plusItemLike(state.data)
-                        } else {
-                            resultAdapter.plusItemLike(state.data)
-                        }
-//                        with(binding) {
-//                            lottieLike.isVisible = true
-//                            lottieLike.playAnimation()
-//                            delay(500)
-//                            lottieLike.isVisible = false
-//                        }
-                    }
-
-                    is UiState.Failure -> toast(stringOf(R.string.error_msg))
-                    else -> return@onEach
+    private fun observeLikeState() {
+        viewModel.likeState.flowWithLifecycle(lifecycle).distinctUntilChanged().onEach { isLiked ->
+            if (isLiked == null) return@onEach
+            if (viewModel.currentKeyword.isEmpty()) {
+                if (isLiked) {
+                    recentAdapter.plusItemLike(viewModel.likedPosition)
+                } else {
+                    recentAdapter.minusItemLike(viewModel.likedPosition)
                 }
-                viewModel.resetLikeState()
-            }.launchIn(lifecycleScope)
-    }
-
-    private fun observeItemLikeMinusState() {
-        viewModel.itemLikeMinusState.flowWithLifecycle(lifecycle).distinctUntilChanged()
-            .onEach { state ->
-                when (state) {
-                    is UiState.Success -> {
-                        if (viewModel.currentKeyword.isEmpty()) {
-                            recentAdapter.minusItemLike(state.data)
-                        } else {
-                            resultAdapter.minusItemLike(state.data)
-                        }
-                    }
-
-                    is UiState.Failure -> toast(stringOf(R.string.error_msg))
-                    else -> return@onEach
+            } else {
+                if (isLiked) {
+                    resultAdapter.plusItemLike(viewModel.likedPosition)
+                } else {
+                    resultAdapter.minusItemLike(viewModel.likedPosition)
                 }
-                viewModel.resetLikeState()
-            }.launchIn(lifecycleScope)
+            }
+        }.launchIn(lifecycleScope)
     }
 
     override fun onDestroy() {
