@@ -7,17 +7,14 @@ import co.orange.domain.repository.DeviceRepository
 import javax.inject.Inject
 
 class DeviceRepositoryImpl
-    @Inject
-    constructor(
-        private val deviceDataSource: DeviceDataSource,
-    ) : DeviceRepository {
-        override suspend fun getProductDetail(id: String): Result<ProductDetailModel> =
-            runCatching {
-                deviceDataSource.getProductDetail(id).data.toModel()
-            }
+@Inject
+constructor(
+    private val deviceDataSource: DeviceDataSource,
+) : DeviceRepository {
+    override suspend fun getProductDetail(id: String): ProductDetailModel =
+        deviceDataSource.getProductDetail(id).data.toModel()
 
-        override suspend fun getSearchInfo(): Result<SearchInfoModel> =
-            runCatching {
-                deviceDataSource.getSearchInfo().data.toModel()
-            }
-    }
+
+    override suspend fun getSearchInfo(): SearchInfoModel =
+        deviceDataSource.getSearchInfo().data.toModel()
+}

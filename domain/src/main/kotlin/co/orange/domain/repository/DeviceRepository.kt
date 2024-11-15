@@ -4,7 +4,7 @@ import co.orange.domain.entity.response.ProductDetailModel
 import co.orange.domain.entity.response.SearchInfoModel
 
 interface DeviceRepository {
-    suspend fun getProductDetail(id: String): Result<ProductDetailModel>
+    suspend fun getProductDetail(id: String): ProductDetailModel
 
-    suspend fun getSearchInfo(): Result<SearchInfoModel>
+    suspend fun getSearchInfo(): SearchInfoModel
 }
