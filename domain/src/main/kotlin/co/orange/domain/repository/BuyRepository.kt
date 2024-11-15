@@ -11,15 +11,15 @@ import co.orange.domain.entity.response.PayEndModel
 import co.orange.domain.entity.response.PayStartModel
 
 interface BuyRepository {
-    suspend fun getBuyProgressData(productId: String): Result<BuyProgressModel>
+    suspend fun getBuyProgressData(productId: String): BuyProgressModel
 
-    suspend fun postPaymentStart(request: PayStartRequestModel): Result<PayStartModel>
+    suspend fun postPaymentStart(request: PayStartRequestModel): PayStartModel
 
-    suspend fun patchPaymentEnd(request: PayEndRequestModel): Result<PayEndModel>
+    suspend fun patchPaymentEnd(request: PayEndRequestModel): PayEndModel
 
-    suspend fun postToRequestOrder(request: OrderRequestModel): Result<OrderIdModel>
+    suspend fun postToRequestOrder(request: OrderRequestModel): OrderIdModel
 
-    suspend fun getOrderInfo(orderId: String): Result<OrderInfoModel>
+    suspend fun getOrderInfo(orderId: String): OrderInfoModel
 
-    suspend fun patchOrderConfirm(orderId: String): Result<OrderConfirmModel>
+    suspend fun patchOrderConfirm(orderId: String): OrderConfirmModel
 }
