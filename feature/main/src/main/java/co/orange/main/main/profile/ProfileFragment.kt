@@ -64,17 +64,13 @@ class ProfileFragment() : BaseFragment<FragmentProfileBinding>(featureR.layout.f
 
     private fun initQuestionBtnListener() {
         binding.btnCenterQuestion.setOnSingleClickListener {
-            Intent(Intent.ACTION_VIEW, Uri.parse(WEB_QUESTION)).apply {
-                startActivity(this)
-            }
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WEB_QUESTION)))
         }
     }
 
     private fun initCenterBtnListener() {
         binding.btnCenterOneOnOne.setOnSingleClickListener {
-            Intent(requireContext(), ReportActivity::class.java).apply {
-                startActivity(this)
-            }
+            startActivity(Intent(requireContext(), ReportActivity::class.java))
         }
     }
 

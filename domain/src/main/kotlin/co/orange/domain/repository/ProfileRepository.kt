@@ -6,7 +6,7 @@ import co.orange.domain.entity.response.HistorySellModel
 import co.orange.domain.entity.response.NicknameModel
 
 interface ProfileRepository {
-    suspend fun getNickname(): Result<NicknameModel>
+    suspend fun getNickname(): NicknameModel
 
     suspend fun getInterestHistory(): Result<HistoryInterestModel>
 
