@@ -22,8 +22,14 @@ class SignUpAndSaveStatusUseCase @Inject constructor(
             isAgreedMarketingTerm = isTermMarketingSelected ?: false,
             ci = iamportCertificationModel.uniqueKey.orEmpty(),
         )
-        val response = authRepository.postToSignUp(userRepository.getAccessToken(), request)
+        val response = authRepository.postToSignUp(
+            "$BEARER ${userRepository.getAccessToken()}", request
+        )
         userRepository.setUserStatus(response.status)
         return@runCatching response
+    }
+
+    companion object {
+        private const val BEARER = "Bearer"
     }
 }
