@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.extension.getFileName
 import co.orange.core.state.UiState
-import co.orange.domain.entity.request.SellCheckRequestModel
-import co.orange.domain.repository.SellRepository
-import co.orange.domain.repository.UploadRepository
+import co.orange.domain.usecase.upload.UploadGetOCRResultUseCase
+import co.orange.domain.usecase.upload.UploadGetSignedUrlUseCase
+import co.orange.domain.usecase.upload.UploadPutImageToCloudUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +21,9 @@ import javax.inject.Inject
 class SellOnboardingViewModel
 @Inject
 constructor(
-    private val sellRepository: SellRepository,
-    private val uploadRepository: UploadRepository,
+    private val uploadGetSignedUrlUseCase: UploadGetSignedUrlUseCase,
+    private val uploadPutImageToCloudUseCase: UploadPutImageToCloudUseCase,
+    private val uploadGetOCRResultUseCase: UploadGetOCRResultUseCase
 ) : ViewModel() {
     private var selectedImageUri = ""
     private var selectedImageName = ""
@@ -52,7 +53,7 @@ constructor(
         selectedImageName = uri.getFileName(contentResolver).orEmpty()
         _changingImageState.value = UiState.Loading
         viewModelScope.launch {
-            sellRepository.getSignedUrl(selectedImageName)
+            uploadGetSignedUrlUseCase(selectedImageName)
                 .onSuccess {
                     uploadedUrl = URL_GCP + selectedImageName
                     putImageToCloud(it.signedUrl)
@@ -66,7 +67,7 @@ constructor(
 
     private fun putImageToCloud(url: String) {
         viewModelScope.launch {
-            uploadRepository.putImageToCloud(url, selectedImageUri)
+            uploadPutImageToCloudUseCase(url, selectedImageUri)
                 .onSuccess {
                     postToCheckProduct()
                 }.onFailure {
@@ -78,16 +79,12 @@ constructor(
 
     private fun postToCheckProduct() {
         viewModelScope.launch {
-            sellRepository.postToCheckProduct(SellCheckRequestModel(uploadedUrl))
+            uploadGetOCRResultUseCase(uploadedUrl)
                 .onSuccess {
-                    if (it.productId.isNotEmpty()) {
-                        productId = it.productId
-                        productName = it.productName
-                        productImage = it.imgUrl
-                        _changingImageState.value = UiState.Success(it.productId)
-                    } else {
-                        _changingImageState.value = UiState.Failure(it.productId)
-                    }
+                    productId = it.productId
+                    productName = it.productName
+                    productImage = it.imgUrl
+                    _changingImageState.value = UiState.Success(it.productId)
                 }
                 .onFailure {
                     _changingImageState.value = UiState.Failure(it.message.toString())

@@ -8,7 +8,7 @@ import co.orange.auth.login.LoginActivity
 import co.orange.core.amplitude.AmplitudeManager
 import co.orange.core.extension.toast
 import co.orange.domain.repository.UserRepository
-import co.orange.domain.usecase.AuthReissueTokenUseCase
+import co.orange.domain.usecase.auth.AuthReissueTokenUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

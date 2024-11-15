@@ -10,11 +10,10 @@ import co.orange.domain.entity.response.BuyProgressModel
 import co.orange.domain.entity.response.PayEndModel
 import co.orange.domain.entity.response.PayStartModel
 import co.orange.domain.enums.PaymentMethod
-import co.orange.domain.repository.BuyRepository
-import co.orange.domain.usecase.BuyGetPurchaseProgressDataUseCase
-import co.orange.domain.usecase.BuyRequestProductOrderUseCase
-import co.orange.domain.usecase.BuySetPayFinishedUseCase
-import co.orange.domain.usecase.BuySetPayStartedUseCase
+import co.orange.domain.usecase.buy.BuyGetPurchaseProgressDataUseCase
+import co.orange.domain.usecase.buy.BuyRequestProductOrderUseCase
+import co.orange.domain.usecase.buy.BuySetPayFinishedUseCase
+import co.orange.domain.usecase.buy.BuySetPayStartedUseCase
 import com.iamport.sdk.data.sdk.IamPortRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
