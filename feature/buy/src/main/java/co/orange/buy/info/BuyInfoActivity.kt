@@ -62,9 +62,7 @@ class BuyInfoActivity : BaseActivity<ActivityBuyInfoBinding>(featureR.layout.act
     }
 
     private fun observeGetOrderInfoState() {
-        viewModel.getOrderInfoState
-            .flowWithLifecycle(lifecycle)
-            .distinctUntilChanged()
+        viewModel.getOrderInfoState.flowWithLifecycle(lifecycle).distinctUntilChanged()
             .onEach { state ->
                 when (state) {
                     is UiState.Success -> setIntentUi(state.data)
@@ -140,9 +138,7 @@ class BuyInfoActivity : BaseActivity<ActivityBuyInfoBinding>(featureR.layout.act
     }
 
     private fun observePatchOrderConfirmResult() {
-        viewModel.patchOrderConfirmResult
-            .flowWithLifecycle(lifecycle)
-            .distinctUntilChanged()
+        viewModel.patchOrderConfirmResult.flowWithLifecycle(lifecycle).distinctUntilChanged()
             .onEach { isSuccess ->
                 if (isSuccess) {
                     toast(stringOf(R.string.buy_order_fix_msg))
