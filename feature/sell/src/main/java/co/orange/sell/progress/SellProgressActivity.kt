@@ -78,14 +78,10 @@ class SellProgressActivity :
     private fun initTermDetailBtnListener() {
         with(binding) {
             btnTermServiceDetail.setOnSingleClickListener {
-                Intent(Intent.ACTION_VIEW, Uri.parse(WEB_TERM_SERVICE)).apply {
-                    startActivity(this)
-                }
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WEB_TERM_SERVICE)))
             }
             btnTermSellDetail.setOnSingleClickListener {
-                Intent(Intent.ACTION_VIEW, Uri.parse(WEB_TERM_SELL)).apply {
-                    startActivity(this)
-                }
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WEB_TERM_SELL)))
             }
         }
     }
@@ -134,16 +130,7 @@ class SellProgressActivity :
         viewModel.getProductState.flowWithLifecycle(lifecycle).distinctUntilChanged()
             .onEach { state ->
                 when (state) {
-                    is UiState.Success -> {
-                        setIntentUi(state.data)
-                        with(viewModel) {
-                            if (isSentToBank) {
-                                if (isBankExist) postToRegisterProduct()
-                                isSentToBank = false
-                                setLoadingState(false)
-                            }
-                        }
-                    }
+                    is UiState.Success -> setIntentUi(state.data)
 
                     is UiState.Failure -> {
                         toast(stringOf(R.string.error_msg))
@@ -169,12 +156,7 @@ class SellProgressActivity :
             .onEach { state ->
                 when (state) {
                     is UiState.Success -> navigateToPushOrFinish(state.data)
-
-                    is UiState.Failure -> {
-                        toast(stringOf(R.string.error_msg))
-                        viewModel.setLoadingState(false)
-                    }
-
+                    is UiState.Failure -> toast(stringOf(R.string.error_msg))
                     else -> return@onEach
                 }
             }.launchIn(lifecycleScope)

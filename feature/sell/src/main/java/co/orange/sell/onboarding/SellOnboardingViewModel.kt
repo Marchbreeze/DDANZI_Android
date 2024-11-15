@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.extension.getFileName
 import co.orange.core.state.UiState
-import co.orange.domain.usecase.upload.GetOCRResultUseCase
 import co.orange.domain.usecase.upload.GetCloudSignedUrlUseCase
+import co.orange.domain.usecase.upload.GetOCRResultUseCase
 import co.orange.domain.usecase.upload.UploadImageToCloudUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -85,6 +85,7 @@ constructor(
                     productName = it.productName
                     productImage = it.imgUrl
                     _changingImageState.value = UiState.Success(it.productId)
+                    resetChangeImageState()
                 }
                 .onFailure {
                     _changingImageState.value = UiState.Failure(it.message.toString())

@@ -4,7 +4,7 @@ import co.orange.domain.enums.OrderStatus
 import co.orange.domain.repository.BuyRepository
 import javax.inject.Inject
 
-class DetermineBuyOrderUseCase @Inject constructor(
+class ConfirmBuyOrderUseCase @Inject constructor(
     private val buyRepository: BuyRepository
 ) {
     suspend operator fun invoke(orderId: String) =

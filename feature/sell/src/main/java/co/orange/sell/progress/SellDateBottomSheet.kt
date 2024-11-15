@@ -45,9 +45,7 @@ class SellDateBottomSheet :
     private fun getDateFromDatePicker(): String =
         with(binding.dpSell) {
             SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
-                Calendar.getInstance().apply {
-                    set(year, month, dayOfMonth)
-                }.time,
+                Calendar.getInstance().apply { set(year, month, dayOfMonth) }.time,
             )
         }
 
