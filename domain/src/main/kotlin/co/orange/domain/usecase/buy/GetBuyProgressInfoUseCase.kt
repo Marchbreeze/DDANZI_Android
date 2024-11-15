@@ -3,7 +3,7 @@ package co.orange.domain.usecase.buy
 import co.orange.domain.repository.BuyRepository
 import javax.inject.Inject
 
-class BuyGetPurchaseProgressDataUseCase @Inject constructor(
+class GetBuyProgressInfoUseCase @Inject constructor(
     private val buyRepository: BuyRepository
 ) {
     suspend operator fun invoke(productId: String) = runCatching {

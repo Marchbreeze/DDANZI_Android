@@ -3,7 +3,7 @@ package co.orange.domain.usecase.upload
 import co.orange.domain.repository.UploadRepository
 import javax.inject.Inject
 
-class UploadPutImageToCloudUseCase @Inject constructor(
+class UploadImageToCloudUseCase @Inject constructor(
     private val uploadRepository: UploadRepository
 ) {
     suspend operator fun invoke(url: String, selectedImageUri: String) =

@@ -5,7 +5,7 @@ import co.orange.domain.entity.response.BuyProgressModel
 import co.orange.domain.repository.BuyRepository
 import javax.inject.Inject
 
-class BuySetPayStartedUseCase @Inject constructor(
+class SetPayStartedUseCase @Inject constructor(
     private val buyRepository: BuyRepository
 ) {
     suspend operator fun invoke(buyProgressData: BuyProgressModel?, payMethod: String) =

@@ -10,10 +10,10 @@ import co.orange.domain.entity.response.BuyProgressModel
 import co.orange.domain.entity.response.PayEndModel
 import co.orange.domain.entity.response.PayStartModel
 import co.orange.domain.enums.PaymentMethod
-import co.orange.domain.usecase.buy.BuyGetPurchaseProgressDataUseCase
-import co.orange.domain.usecase.buy.BuyRequestProductOrderUseCase
-import co.orange.domain.usecase.buy.BuySetPayFinishedUseCase
-import co.orange.domain.usecase.buy.BuySetPayStartedUseCase
+import co.orange.domain.usecase.buy.GetBuyProgressInfoUseCase
+import co.orange.domain.usecase.buy.RequestBuyOrderUseCase
+import co.orange.domain.usecase.buy.SetPayFinishedUseCase
+import co.orange.domain.usecase.buy.SetPayStartedUseCase
 import com.iamport.sdk.data.sdk.IamPortRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,10 +26,10 @@ import javax.inject.Inject
 class BuyProgressViewModel
 @Inject
 constructor(
-    private val buyProgressUseCase: BuyGetPurchaseProgressDataUseCase,
-    private val buySetPayStartedUseCase: BuySetPayStartedUseCase,
-    private val buySetPayFinishedUseCase: BuySetPayFinishedUseCase,
-    private val buyRequestProductOrderUseCase: BuyRequestProductOrderUseCase
+    private val buyProgressUseCase: GetBuyProgressInfoUseCase,
+    private val setPayStartedUseCase: SetPayStartedUseCase,
+    private val setPayFinishedUseCase: SetPayFinishedUseCase,
+    private val requestBuyOrderUseCase: RequestBuyOrderUseCase
 ) : ViewModel() {
     var productId: String = ""
     private var orderId: String = ""
@@ -110,7 +110,7 @@ constructor(
         isOrderStarted = true
         _postPayStartState.value = UiState.Loading
         viewModelScope.launch {
-            buySetPayStartedUseCase(buyProgressData, payMethod)
+            setPayStartedUseCase(buyProgressData, payMethod)
                 .onSuccess {
                     orderId = it.orderId
                     _postPayStartState.value = UiState.Success(it)
@@ -140,7 +140,7 @@ constructor(
     fun patchPayEndToServer(isSuccess: Boolean?) {
         _patchPayEndState.value = UiState.Loading
         viewModelScope.launch {
-            buySetPayFinishedUseCase(orderId, isSuccess)
+            setPayFinishedUseCase(orderId, isSuccess)
                 .onSuccess {
                     _patchPayEndState.value = UiState.Success(it)
                 }.onFailure {
@@ -152,7 +152,7 @@ constructor(
     fun postToRequestOrderToServer() {
         _postOrderState.value = UiState.Loading
         viewModelScope.launch {
-            buyRequestProductOrderUseCase(orderId, optionList)
+            requestBuyOrderUseCase(orderId, optionList)
                 .onSuccess {
                     AmplitudeManager.apply {
                         plusIntProperty("user_purchase_count", 1)

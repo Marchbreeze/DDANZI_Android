@@ -5,7 +5,7 @@ import co.orange.domain.repository.AuthRepository
 import co.orange.domain.repository.UserRepository
 import javax.inject.Inject
 
-class AuthChangeTokenAndSaveUseCase @Inject constructor(
+class ExchangeTokensAndSaveUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository
 ) {

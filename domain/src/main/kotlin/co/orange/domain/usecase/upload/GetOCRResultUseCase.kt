@@ -4,7 +4,7 @@ import co.orange.domain.entity.request.SellCheckRequestModel
 import co.orange.domain.repository.SellRepository
 import javax.inject.Inject
 
-class UploadGetOCRResultUseCase @Inject constructor(
+class GetOCRResultUseCase @Inject constructor(
     private val sellRepository: SellRepository
 ) {
     suspend operator fun invoke(uploadedUrl: String) =

@@ -6,7 +6,7 @@ import co.orange.domain.repository.AuthRepository
 import co.orange.domain.repository.UserRepository
 import javax.inject.Inject
 
-class AuthSignUpAndSaveStatusUseCase @Inject constructor(
+class SignUpAndSaveStatusUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
 ) {

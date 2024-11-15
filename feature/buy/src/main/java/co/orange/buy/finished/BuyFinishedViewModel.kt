@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.OrderInfoModel
-import co.orange.domain.usecase.buy.BuyGetOrderInfoUseCase
+import co.orange.domain.usecase.buy.GetBuyOrderInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class BuyFinishedViewModel
 @Inject
 constructor(
-    private val buyGetOrderInfoUseCase: BuyGetOrderInfoUseCase
+    private val getBuyOrderInfoUseCase: GetBuyOrderInfoUseCase
 ) : ViewModel() {
     var orderId: String = ""
 
@@ -25,7 +25,7 @@ constructor(
     fun getOrderInfoFromServer() {
         _getOrderInfoState.value = UiState.Loading
         viewModelScope.launch {
-            buyGetOrderInfoUseCase(orderId)
+            getBuyOrderInfoUseCase(orderId)
                 .onSuccess {
                     _getOrderInfoState.value = UiState.Success(it)
                 }

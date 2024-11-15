@@ -4,7 +4,7 @@ import co.orange.domain.entity.request.PayEndRequestModel
 import co.orange.domain.repository.BuyRepository
 import javax.inject.Inject
 
-class BuySetPayFinishedUseCase @Inject constructor(
+class SetPayFinishedUseCase @Inject constructor(
     private val buyRepository: BuyRepository
 ) {
     suspend operator fun invoke(orderId: String, isSuccess: Boolean?) =

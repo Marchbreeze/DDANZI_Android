@@ -3,7 +3,7 @@ package co.orange.domain.usecase.buy
 import co.orange.domain.repository.BuyRepository
 import javax.inject.Inject
 
-class BuyGetOrderInfoUseCase @Inject constructor(
+class GetBuyOrderInfoUseCase @Inject constructor(
     private val buyRepository: BuyRepository
 ) {
     suspend operator fun invoke(orderId: String) =

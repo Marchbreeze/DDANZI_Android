@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.extension.getFileName
 import co.orange.core.state.UiState
-import co.orange.domain.usecase.upload.UploadGetOCRResultUseCase
-import co.orange.domain.usecase.upload.UploadGetSignedUrlUseCase
-import co.orange.domain.usecase.upload.UploadPutImageToCloudUseCase
+import co.orange.domain.usecase.upload.GetOCRResultUseCase
+import co.orange.domain.usecase.upload.GetCloudSignedUrlUseCase
+import co.orange.domain.usecase.upload.UploadImageToCloudUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,9 +21,9 @@ import javax.inject.Inject
 class SellOnboardingViewModel
 @Inject
 constructor(
-    private val uploadGetSignedUrlUseCase: UploadGetSignedUrlUseCase,
-    private val uploadPutImageToCloudUseCase: UploadPutImageToCloudUseCase,
-    private val uploadGetOCRResultUseCase: UploadGetOCRResultUseCase
+    private val getCloudSignedUrlUseCase: GetCloudSignedUrlUseCase,
+    private val uploadImageToCloudUseCase: UploadImageToCloudUseCase,
+    private val getOCRResultUseCase: GetOCRResultUseCase
 ) : ViewModel() {
     private var selectedImageUri = ""
     private var selectedImageName = ""
@@ -53,7 +53,7 @@ constructor(
         selectedImageName = uri.getFileName(contentResolver).orEmpty()
         _changingImageState.value = UiState.Loading
         viewModelScope.launch {
-            uploadGetSignedUrlUseCase(selectedImageName)
+            getCloudSignedUrlUseCase(selectedImageName)
                 .onSuccess {
                     uploadedUrl = URL_GCP + selectedImageName
                     putImageToCloud(it.signedUrl)
@@ -67,7 +67,7 @@ constructor(
 
     private fun putImageToCloud(url: String) {
         viewModelScope.launch {
-            uploadPutImageToCloudUseCase(url, selectedImageUri)
+            uploadImageToCloudUseCase(url, selectedImageUri)
                 .onSuccess {
                     postToCheckProduct()
                 }.onFailure {
@@ -79,7 +79,7 @@ constructor(
 
     private fun postToCheckProduct() {
         viewModelScope.launch {
-            uploadGetOCRResultUseCase(uploadedUrl)
+            getOCRResultUseCase(uploadedUrl)
                 .onSuccess {
                     productId = it.productId
                     productName = it.productName

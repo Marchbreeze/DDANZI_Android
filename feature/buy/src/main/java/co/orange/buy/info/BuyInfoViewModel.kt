@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.OrderInfoModel
-import co.orange.domain.usecase.buy.BuyConfirmOrderUseCase
-import co.orange.domain.usecase.buy.BuyGetOrderInfoUseCase
+import co.orange.domain.usecase.buy.DetermineBuyOrderUseCase
+import co.orange.domain.usecase.buy.GetBuyOrderInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +18,8 @@ import javax.inject.Inject
 class BuyInfoViewModel
 @Inject
 constructor(
-    private val buyGetOrderInfoUseCase: BuyGetOrderInfoUseCase,
-    private val buyConfirmOrderUseCase: BuyConfirmOrderUseCase
+    private val getBuyOrderInfoUseCase: GetBuyOrderInfoUseCase,
+    private val determineBuyOrderUseCase: DetermineBuyOrderUseCase
 ) : ViewModel() {
     var orderId: String = ""
 
@@ -32,7 +32,7 @@ constructor(
     fun getOrderInfoFromServer() {
         _getOrderInfoState.value = UiState.Loading
         viewModelScope.launch {
-            buyGetOrderInfoUseCase(orderId)
+            getBuyOrderInfoUseCase(orderId)
                 .onSuccess {
                     _getOrderInfoState.value = UiState.Success(it)
                 }
@@ -44,7 +44,7 @@ constructor(
 
     fun patchOrderConfirmToServer() {
         viewModelScope.launch {
-            buyConfirmOrderUseCase(orderId)
+            determineBuyOrderUseCase(orderId)
                 .onSuccess {
                     _patchOrderConfirmResult.emit(true)
                 }
