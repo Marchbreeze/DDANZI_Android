@@ -1,4 +1,4 @@
-package co.orange.domain.usecase
+package co.orange.domain.usecase.buy
 
 import co.orange.domain.enums.OrderStatus
 import co.orange.domain.repository.BuyRepository

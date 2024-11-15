@@ -1,4 +1,4 @@
-package co.orange.domain.usecase
+package co.orange.domain.usecase.certificate
 
 import co.orange.domain.entity.response.IamportCertificationModel
 import co.orange.domain.repository.IamportRepository

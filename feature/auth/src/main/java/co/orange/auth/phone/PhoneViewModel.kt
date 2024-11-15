@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import co.orange.core.amplitude.AmplitudeManager
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.IamportCertificationModel
-import co.orange.domain.usecase.AuthSignUpAndSaveStatusUseCase
-import co.orange.domain.usecase.IamportGetDataAndSaveUseCase
-import co.orange.domain.usecase.IamportGetTokenUseCase
+import co.orange.domain.usecase.auth.AuthSignUpAndSaveStatusUseCase
+import co.orange.domain.usecase.certificate.IamportGetDataAndSaveUseCase
+import co.orange.domain.usecase.certificate.IamportGetTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

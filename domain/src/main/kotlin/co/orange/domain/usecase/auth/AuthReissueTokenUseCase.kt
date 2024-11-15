@@ -1,4 +1,4 @@
-package co.orange.domain.usecase
+package co.orange.domain.usecase.auth
 
 import co.orange.domain.entity.request.ReissueRequestModel
 import co.orange.domain.repository.AuthRepository

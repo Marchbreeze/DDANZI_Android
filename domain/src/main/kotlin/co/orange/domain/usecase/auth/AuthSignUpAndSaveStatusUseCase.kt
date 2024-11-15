@@ -1,4 +1,4 @@
-package co.orange.domain.usecase
+package co.orange.domain.usecase.auth
 
 import co.orange.domain.entity.request.SignUpRequestModel
 import co.orange.domain.entity.response.IamportCertificationModel

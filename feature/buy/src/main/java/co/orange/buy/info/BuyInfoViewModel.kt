@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.OrderInfoModel
-import co.orange.domain.usecase.BuyConfirmOrderUseCase
-import co.orange.domain.usecase.BuyGetOrderInfoUseCase
+import co.orange.domain.usecase.buy.BuyConfirmOrderUseCase
+import co.orange.domain.usecase.buy.BuyGetOrderInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
