@@ -10,7 +10,8 @@ class LogoutAccountUseCase @Inject constructor(
 ) {
     suspend operator fun invoke() =
         runCatching {
-            val response = deviceRepository.getSearchInfo()
+            val response = settingRepository.postUserLogout()
+            userRepository.clearInfo()
             return@runCatching response
         }
 }

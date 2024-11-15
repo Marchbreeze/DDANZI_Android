@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import co.orange.core.state.UiState
 import co.orange.domain.repository.SettingRepository
 import co.orange.domain.repository.UserRepository
+import co.orange.domain.usecase.setting.LogoutAccountUseCase
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,8 +19,7 @@ import javax.inject.Inject
 class AccountViewModel
     @Inject
     constructor(
-        private val settingRepository: SettingRepository,
-        private val userRepository: UserRepository,
+        private val logoutAccountUseCase: LogoutAccountUseCase,
     ) : ViewModel() {
 
         private val _userLogoutState = MutableStateFlow<UiState<Boolean>>(UiState.Empty)
@@ -29,6 +29,7 @@ class AccountViewModel
         val userQuitState: StateFlow<UiState<String>> = _userQuitState
 
         fun logoutKakaoAccount() {
+            _userLogoutState.value = UiState.Loading
             UserApiClient.instance.logout { error ->
                 viewModelScope.launch {
                     if (error == null) {
@@ -41,11 +42,9 @@ class AccountViewModel
         }
 
         private fun logoutFromServer() {
-            _userLogoutState.value = UiState.Loading
             viewModelScope.launch {
-                settingRepository.postUserLogout()
+                logoutAccountUseCase()
                     .onSuccess {
-                        userRepository.clearInfo()
                         _userLogoutState.value = UiState.Success(it)
                     }.onFailure {
                         _userLogoutState.value = UiState.Failure(it.message.toString())
@@ -54,6 +53,7 @@ class AccountViewModel
         }
 
         fun quitKakaoAccount() {
+            _userQuitState.value = UiState.Loading
             UserApiClient.instance.unlink { error ->
                 viewModelScope.launch {
                     if (error == null) {
@@ -66,7 +66,6 @@ class AccountViewModel
         }
 
         private fun quitFromServer() {
-            _userQuitState.value = UiState.Loading
             viewModelScope.launch {
                 settingRepository.deleteToUserQuit()
                     .onSuccess {
