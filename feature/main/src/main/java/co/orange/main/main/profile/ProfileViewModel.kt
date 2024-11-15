@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.NicknameModel
 import co.orange.domain.repository.UserRepository
-import co.orange.domain.usecase.profile.GetProfileNicknameUseCase
+import co.orange.domain.usecase.setting.GetProfileNicknameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

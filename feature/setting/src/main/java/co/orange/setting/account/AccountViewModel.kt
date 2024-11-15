@@ -21,14 +21,9 @@ class AccountViewModel
         private val settingRepository: SettingRepository,
         private val userRepository: UserRepository,
     ) : ViewModel() {
-        private val _kakaoLogoutResult = MutableSharedFlow<Boolean>()
-        val kakaoLogoutResult: SharedFlow<Boolean> = _kakaoLogoutResult
 
         private val _userLogoutState = MutableStateFlow<UiState<Boolean>>(UiState.Empty)
         val userLogoutState: StateFlow<UiState<Boolean>> = _userLogoutState
-
-        private val _kakaoQuitResult = MutableSharedFlow<Boolean>()
-        val kakaoQuitResult: SharedFlow<Boolean> = _kakaoQuitResult
 
         private val _userQuitState = MutableStateFlow<UiState<String>>(UiState.Empty)
         val userQuitState: StateFlow<UiState<String>> = _userQuitState
@@ -39,7 +34,7 @@ class AccountViewModel
                     if (error == null) {
                         logoutFromServer()
                     } else {
-                        _kakaoLogoutResult.emit(false)
+                        _userLogoutState.value = UiState.Failure(error.message.toString())
                     }
                 }
             }
@@ -64,7 +59,7 @@ class AccountViewModel
                     if (error == null) {
                         quitFromServer()
                     } else {
-                        _kakaoQuitResult.emit(false)
+                        _userQuitState.value = UiState.Failure(error.message.toString())
                     }
                 }
             }

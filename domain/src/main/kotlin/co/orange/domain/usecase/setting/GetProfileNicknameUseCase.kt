@@ -1,4 +1,4 @@
-package co.orange.domain.usecase.profile
+package co.orange.domain.usecase.setting
 
 import co.orange.domain.repository.ProfileRepository
 import javax.inject.Inject

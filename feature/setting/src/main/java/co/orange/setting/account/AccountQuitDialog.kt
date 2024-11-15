@@ -43,7 +43,6 @@ class AccountQuitDialog :
 
         initReturnBtnListener()
         initQuitBtnListener()
-        observeKakaoQuitResult()
         observeUserQuitState()
     }
 
@@ -55,13 +54,6 @@ class AccountQuitDialog :
         binding.btnQuit.setOnSingleClickListener {
             viewModel.quitKakaoAccount()
         }
-    }
-
-    private fun observeKakaoQuitResult() {
-        viewModel.kakaoQuitResult.flowWithLifecycle(lifecycle).distinctUntilChanged()
-            .onEach { isSuccess ->
-                if (!isSuccess) toast(stringOf(R.string.error_msg))
-            }.launchIn(lifecycleScope)
     }
 
     private fun observeUserQuitState() {
