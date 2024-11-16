@@ -8,12 +8,13 @@ class SetInterestStateUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(likeState: Boolean, productId: String) =
         runCatching {
-            if (likeState) {
+            val response = if (likeState) {
                 interestRepository.deleteInterest(productId)
-                return@runCatching false
+                false
             } else {
                 interestRepository.postInterest(productId)
-                return@runCatching true
+                true
             }
+            return@runCatching response
         }
 }

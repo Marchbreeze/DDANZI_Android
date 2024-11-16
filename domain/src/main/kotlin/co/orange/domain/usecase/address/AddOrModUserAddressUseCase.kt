@@ -1,4 +1,4 @@
-package co.orange.domain.address
+package co.orange.domain.usecase.address
 
 import co.orange.domain.entity.request.AddressRequestModel
 import co.orange.domain.repository.SettingRepository

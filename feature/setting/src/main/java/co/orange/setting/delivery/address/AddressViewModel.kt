@@ -3,7 +3,7 @@ package co.orange.setting.delivery.address
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.orange.domain.address.AddOrModUserAddressUseCase
+import co.orange.domain.usecase.address.AddOrModUserAddressUseCase
 import co.orange.domain.repository.UserRepository
 import co.orange.domain.usecase.setting.GetUserDefaultInfoUseCase
 import co.orange.setting.delivery.address.AddressActivity.Companion.DEFAULT_ID
