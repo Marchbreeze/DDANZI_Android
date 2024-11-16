@@ -1,11 +1,11 @@
-package co.orange.domain.usecase
+package co.orange.domain.usecase.certificate
 
 import co.orange.domain.entity.response.IamportCertificationModel
 import co.orange.domain.repository.IamportRepository
 import co.orange.domain.repository.UserRepository
 import javax.inject.Inject
 
-class IamportGetDataAndSaveUseCase @Inject constructor(
+class GetPhoneCertificateDataUseCase @Inject constructor(
     private val iamportRepository: IamportRepository,
     private val userRepository: UserRepository,
 ) {

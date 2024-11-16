@@ -5,11 +5,11 @@ import co.orange.domain.entity.response.HomeModel
 import co.orange.domain.entity.response.SearchResultModel
 
 interface HomeRepository {
-    suspend fun getHomeData(page: Int): Result<HomeModel>
+    suspend fun getHomeData(page: Int): HomeModel
 
-    suspend fun getSearchResult(keyword: String): Result<SearchResultModel>
+    suspend fun getSearchResult(keyword: String): SearchResultModel
 
-    suspend fun getAlarmList(): Result<AlarmListModel>
+    suspend fun getAlarmList(): AlarmListModel
 
-    suspend fun patchToReadAlarm(alarmId: Long): Result<Boolean>
+    suspend fun patchToReadAlarm(alarmId: Long): Boolean
 }

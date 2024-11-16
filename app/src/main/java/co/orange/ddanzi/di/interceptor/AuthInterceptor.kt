@@ -8,7 +8,7 @@ import co.orange.auth.login.LoginActivity
 import co.orange.core.amplitude.AmplitudeManager
 import co.orange.core.extension.toast
 import co.orange.domain.repository.UserRepository
-import co.orange.domain.usecase.AuthReissueTokenUseCase
+import co.orange.domain.usecase.auth.ReissueTokenUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class AuthInterceptor
 @Inject
 constructor(
-    private val authReissueTokenUseCase: AuthReissueTokenUseCase,
+    private val reissueTokenUseCase: ReissueTokenUseCase,
     private val userRepository: UserRepository,
     @ApplicationContext private val context: Context,
 ) : Interceptor {
@@ -41,7 +41,7 @@ constructor(
         if (response.code == CODE_TOKEN_EXPIRED) {
             try {
                 runBlocking {
-                    authReissueTokenUseCase()
+                    reissueTokenUseCase()
                 }.onSuccess {
                     response.close()
 

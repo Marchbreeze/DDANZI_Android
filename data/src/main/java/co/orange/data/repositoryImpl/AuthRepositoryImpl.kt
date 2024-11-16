@@ -19,9 +19,7 @@ constructor(
     private val authDataSource: AuthDataSource,
 ) : AuthRepository {
     override suspend fun postReissueTokens(request: ReissueRequestModel): ReissueTokenModel =
-        authDataSource.postReissueTokens(
-            request.toDto(),
-        ).data.toModel()
+        authDataSource.postReissueTokens(request.toDto()).data.toModel()
 
     override suspend fun postOauthDataToGetToken(request: AuthRequestModel): AuthTokenModel =
         authDataSource.postOauthDataToGetToken(request.toDto()).data.toModel()
@@ -30,17 +28,8 @@ constructor(
         accesstoken: String,
         request: SignUpRequestModel,
     ): SignUpModel =
-        authDataSource.postToSignUp(
-            "$BEARER $accesstoken",
-            request.toDto(),
-        ).data.toModel()
+        authDataSource.postToSignUp(accesstoken, request.toDto()).data.toModel()
 
-    override suspend fun getServerStatus(): Result<Boolean> =
-        runCatching {
-            authDataSource.getServerStatus().data
-        }
-
-    companion object {
-        private const val BEARER = "Bearer"
-    }
+    override suspend fun getServerStatus(): Boolean =
+        authDataSource.getServerStatus().data
 }

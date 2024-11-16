@@ -52,13 +52,7 @@ class BankAddActivity : BaseActivity<ActivityBankAddBinding>(featureR.layout.act
     private fun initConfirmBtnListener() {
         binding.btnConfirm.setOnSingleClickListener {
             AmplitudeManager.trackEvent("click_account_next")
-            with(viewModel) {
-                if (accountId == DEFAULT_ID) {
-                    postToAddBankToServer()
-                } else {
-                    putToModBankToServer(accountId)
-                }
-            }
+            viewModel.setBankToServer()
         }
     }
 
@@ -89,7 +83,6 @@ class BankAddActivity : BaseActivity<ActivityBankAddBinding>(featureR.layout.act
     }
 
     companion object {
-        const val DEFAULT_ID: Long = -1
         private const val BOTTOM_SHEET_BANK_TYPE = "BOTTOM_SHEET_BANK_TYPE"
 
         private const val EXTRA_ACCOUNT_ID = "EXTRA_ACCOUNT_ID"

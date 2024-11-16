@@ -53,9 +53,7 @@ class DeliveryActivity : BaseActivity<ActivityDeliveryBinding>(featureR.layout.a
     }
 
     private fun navigateToAddressView(addressId: Long) {
-        AddressActivity.createIntent(this, addressId).apply {
-            startActivity(this)
-        }
+        startActivity(AddressActivity.createIntent(this, addressId))
     }
 
     private fun initDeleteBtnListener() {

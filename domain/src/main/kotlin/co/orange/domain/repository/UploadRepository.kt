@@ -4,5 +4,5 @@ interface UploadRepository {
     suspend fun putImageToCloud(
         signedUrl: String,
         image: String,
-    ): Result<Unit>
+    ): Unit
 }

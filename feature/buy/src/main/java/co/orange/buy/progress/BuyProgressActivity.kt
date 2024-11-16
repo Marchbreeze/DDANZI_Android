@@ -15,7 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import co.orange.buy.BuildConfig.IAMPORT_CODE
 import co.orange.buy.databinding.ActivityBuyProgressBinding
 import co.orange.buy.finished.BuyFinishedActivity
-import co.orange.buy.progress.BuyProgressViewModel.Companion.PAY_SUCCESS
 import co.orange.core.R
 import co.orange.core.amplitude.AmplitudeManager
 import co.orange.core.base.BaseActivity
@@ -207,14 +206,7 @@ class BuyProgressActivity :
         viewModel.patchPayEndState.flowWithLifecycle(lifecycle).distinctUntilChanged()
             .onEach { state ->
                 when (state) {
-                    is UiState.Success -> {
-                        if (state.data.payStatus == PAY_SUCCESS) {
-                            viewModel.postToRequestOrderToServer()
-                        } else {
-                            toast(stringOf(R.string.error_msg))
-                        }
-                    }
-
+                    is UiState.Success -> viewModel.postToRequestOrderToServer()
                     is UiState.Failure -> toast(stringOf(R.string.buy_order_error_msg))
                     else -> return@onEach
                 }
@@ -225,14 +217,7 @@ class BuyProgressActivity :
         viewModel.postOrderState.flowWithLifecycle(lifecycle).distinctUntilChanged()
             .onEach { state ->
                 when (state) {
-                    is UiState.Success -> {
-                        AmplitudeManager.apply {
-                            plusIntProperty("user_purchase_count", 1)
-                            plusIntProperty("user_purchase_total", viewModel.totalPrice)
-                        }
-                        navigateToPushOrFinish(state.data)
-                    }
-
+                    is UiState.Success -> navigateToPushOrFinish(state.data)
                     is UiState.Failure -> toast(stringOf(R.string.buy_order_error_msg))
                     else -> return@onEach
                 }
@@ -241,11 +226,12 @@ class BuyProgressActivity :
 
     private fun navigateToPushOrFinish(orderId: String) {
         if (isPermissionNeeded()) {
-            navigateToPushActivity(orderId)
+            navigationManager.toAlarmRequestViewWithIntent(this, true, orderId, null, null, null, null)
         } else {
             AmplitudeManager.updateProperty("user_push", "enabled")
-            navigateToBuyFinishedActivity(orderId)
+            startActivity(BuyFinishedActivity.createIntent(this, orderId))
         }
+        finish()
     }
 
     private fun isPermissionNeeded(): Boolean =
@@ -257,17 +243,6 @@ class BuyProgressActivity :
         } else {
             false
         }
-
-    private fun navigateToBuyFinishedActivity(orderId: String) {
-        BuyFinishedActivity.createIntent(this, orderId)
-            .apply { startActivity(this) }
-        finish()
-    }
-
-    private fun navigateToPushActivity(orderId: String) {
-        navigationManager.toAlarmRequestViewWithIntent(this, true, orderId, null, null, null, null)
-        finish()
-    }
 
     override fun onDestroy() {
         super.onDestroy()

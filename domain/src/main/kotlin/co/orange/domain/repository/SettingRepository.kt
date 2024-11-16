@@ -8,29 +8,29 @@ import co.orange.domain.entity.response.NicknameModel
 import co.orange.domain.entity.response.SettingInfoModel
 
 interface SettingRepository {
-    suspend fun getSettingInfo(): Result<SettingInfoModel>
+    suspend fun getSettingInfo(): SettingInfoModel
 
-    suspend fun postToAddAddress(request: AddressRequestModel): Result<AddressModel>
+    suspend fun postToAddAddress(request: AddressRequestModel): AddressModel
 
     suspend fun putToModAddress(
         addressId: Long,
         request: AddressRequestModel,
-    ): Result<AddressModel>
+    ): AddressModel
 
-    suspend fun getUserAddress(): Result<AddressModel>
+    suspend fun getUserAddress(): AddressModel
 
-    suspend fun deleteUserAddress(addressId: Long): Result<Boolean>
+    suspend fun deleteUserAddress(addressId: Long): Boolean
 
-    suspend fun postUserLogout(): Result<Boolean>
+    suspend fun postUserLogout(): Boolean
 
-    suspend fun deleteToUserQuit(): Result<NicknameModel>
+    suspend fun deleteToUserQuit(): NicknameModel
 
-    suspend fun postToAddBank(request: BankRequestModel): Result<BankModel>
+    suspend fun postToAddBank(request: BankRequestModel): BankModel
 
     suspend fun putToModBank(
         accountId: Long,
         request: BankRequestModel,
-    ): Result<BankModel>
+    ): BankModel
 
-    suspend fun getUserBank(): Result<BankModel>
+    suspend fun getUserBank(): BankModel
 }

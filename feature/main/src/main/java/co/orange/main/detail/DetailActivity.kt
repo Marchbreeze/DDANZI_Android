@@ -159,12 +159,6 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>(featureR.layout.activ
             with(binding) {
                 ivDetailLike.isSelected = isLiked
                 tvDetailLike.text = viewModel.interestCount.setOverThousand()
-//                if (isLiked && viewModel.isLikeLottieNeeded) {
-//                    lottieLike.isVisible = true
-//                    lottieLike.playAnimation()
-//                    delay(500)
-//                    lottieLike.isVisible = false
-//                }
             }
         }.launchIn(lifecycleScope)
     }

@@ -15,48 +15,30 @@ import co.orange.domain.entity.response.SignedUrlModel
 import co.orange.domain.repository.SellRepository
 import javax.inject.Inject
 
-class SellRepositoryImpl
-    @Inject
-    constructor(
-        private val sellDataSource: SellDataSource,
-    ) : SellRepository {
-        override suspend fun getSignedUrl(fileName: String): Result<SignedUrlModel> =
-            runCatching {
-                sellDataSource.getSignedUrl(fileName).data.toModel()
-            }
+class SellRepositoryImpl @Inject constructor(
+    private val sellDataSource: SellDataSource,
+) : SellRepository {
+    override suspend fun getSignedUrl(fileName: String): SignedUrlModel =
+        sellDataSource.getSignedUrl(fileName).data.toModel()
 
-        override suspend fun postToCheckProduct(request: SellCheckRequestModel): Result<SellCheckedProductModel> =
-            runCatching {
-                sellDataSource.postToCheckProduct(request.toDto()).data.toModel()
-            }
+    override suspend fun postToCheckProduct(request: SellCheckRequestModel): SellCheckedProductModel =
+        sellDataSource.postToCheckProduct(request.toDto()).data.toModel()
 
-        override suspend fun getProductToSell(productId: String): Result<SellProductModel> =
-            runCatching {
-                sellDataSource.getProductToSell(productId).data.toModel()
-            }
+    override suspend fun getProductToSell(productId: String): SellProductModel =
+        sellDataSource.getProductToSell(productId).data.toModel()
 
-        override suspend fun postToRegisterProduct(request: SellRegisterRequestModel): Result<SellRegisteredModel> =
-            runCatching {
-                sellDataSource.postToRegisterProduct(request.toDto()).data.toModel()
-            }
+    override suspend fun postToRegisterProduct(request: SellRegisterRequestModel): SellRegisteredModel =
+        sellDataSource.postToRegisterProduct(request.toDto()).data.toModel()
 
-        override suspend fun getItemDetailInfo(itemId: String): Result<SellInfoModel> =
-            runCatching {
-                sellDataSource.getItemDetailInfo(itemId).data.toModel()
-            }
+    override suspend fun getItemDetailInfo(itemId: String): SellInfoModel =
+        sellDataSource.getItemDetailInfo(itemId).data.toModel()
 
-        override suspend fun getBuyerInfo(orderId: String): Result<SellBuyerInfoModel> =
-            runCatching {
-                sellDataSource.getBuyerInfo(orderId).data.toModel()
-            }
+    override suspend fun getBuyerInfo(orderId: String): SellBuyerInfoModel =
+        sellDataSource.getBuyerInfo(orderId).data.toModel()
 
-        override suspend fun patchOrderConfirm(orderId: String): Result<OrderConfirmModel> =
-            runCatching {
-                sellDataSource.patchOrderConfirm(orderId).data.toModel()
-            }
+    override suspend fun patchOrderConfirm(orderId: String): OrderConfirmModel =
+        sellDataSource.patchOrderConfirm(orderId).data.toModel()
 
-        override suspend fun deleteSellingItem(itemId: String): Result<Boolean> =
-            runCatching {
-                sellDataSource.deleteSellingItem(itemId).data
-            }
-    }
+    override suspend fun deleteSellingItem(itemId: String): Boolean =
+        sellDataSource.deleteSellingItem(itemId).data
+}

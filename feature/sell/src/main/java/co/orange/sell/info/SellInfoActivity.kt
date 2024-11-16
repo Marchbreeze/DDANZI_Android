@@ -70,9 +70,7 @@ class SellInfoActivity : BaseActivity<ActivitySellInfoBinding>(featureR.layout.a
     }
 
     private fun observeGetSellInfoState() {
-        viewModel.getSellInfoState
-            .flowWithLifecycle(lifecycle)
-            .distinctUntilChanged()
+        viewModel.getSellInfoState.flowWithLifecycle(lifecycle).distinctUntilChanged()
             .onEach { state ->
                 when (state) {
                     is UiState.Success -> setIntentUi(state.data)

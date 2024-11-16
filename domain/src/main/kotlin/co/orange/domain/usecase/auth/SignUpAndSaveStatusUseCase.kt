@@ -1,4 +1,4 @@
-package co.orange.domain.usecase
+package co.orange.domain.usecase.auth
 
 import co.orange.domain.entity.request.SignUpRequestModel
 import co.orange.domain.entity.response.IamportCertificationModel
@@ -6,7 +6,7 @@ import co.orange.domain.repository.AuthRepository
 import co.orange.domain.repository.UserRepository
 import javax.inject.Inject
 
-class AuthSignUpAndSaveStatusUseCase @Inject constructor(
+class SignUpAndSaveStatusUseCase @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
 ) {
@@ -22,8 +22,14 @@ class AuthSignUpAndSaveStatusUseCase @Inject constructor(
             isAgreedMarketingTerm = isTermMarketingSelected ?: false,
             ci = iamportCertificationModel.uniqueKey.orEmpty(),
         )
-        val response = authRepository.postToSignUp(userRepository.getAccessToken(), request)
+        val response = authRepository.postToSignUp(
+            "$BEARER ${userRepository.getAccessToken()}", request
+        )
         userRepository.setUserStatus(response.status)
         return@runCatching response
+    }
+
+    companion object {
+        private const val BEARER = "Bearer"
     }
 }

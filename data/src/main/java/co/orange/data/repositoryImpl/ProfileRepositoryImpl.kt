@@ -9,27 +9,19 @@ import co.orange.domain.repository.ProfileRepository
 import javax.inject.Inject
 
 class ProfileRepositoryImpl
-    @Inject
-    constructor(
-        private val profileDataSource: ProfileDataSource,
-    ) : ProfileRepository {
-        override suspend fun getNickname(): Result<NicknameModel> =
-            runCatching {
-                profileDataSource.getNickname().data.toModel()
-            }
+@Inject
+constructor(
+    private val profileDataSource: ProfileDataSource,
+) : ProfileRepository {
+    override suspend fun getNickname(): NicknameModel =
+        profileDataSource.getNickname().data.toModel()
 
-        override suspend fun getInterestHistory(): Result<HistoryInterestModel> =
-            runCatching {
-                profileDataSource.getInterestHistory().data.toModel()
-            }
+    override suspend fun getInterestHistory(): HistoryInterestModel =
+        profileDataSource.getInterestHistory().data.toModel()
 
-        override suspend fun getBuyHistory(): Result<HistoryBuyModel> =
-            runCatching {
-                profileDataSource.getBuyHistory().data.toModel()
-            }
+    override suspend fun getBuyHistory(): HistoryBuyModel =
+        profileDataSource.getBuyHistory().data.toModel()
 
-        override suspend fun getSellHistory(): Result<HistorySellModel> =
-            kotlin.runCatching {
-                profileDataSource.getSellHistory().data.toModel()
-            }
-    }
+    override suspend fun getSellHistory(): HistorySellModel =
+        profileDataSource.getSellHistory().data.toModel()
+}

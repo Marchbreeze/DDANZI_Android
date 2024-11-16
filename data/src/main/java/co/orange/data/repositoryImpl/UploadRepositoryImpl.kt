@@ -9,19 +9,17 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class UploadRepositoryImpl
-    @Inject
-    constructor(
-        @ApplicationContext private val context: Context,
-        private val uploadService: UploadService,
-    ) : UploadRepository {
-        override suspend fun putImageToCloud(
-            signedUrl: String,
-            image: String,
-        ): Result<Unit> =
-            runCatching {
-                uploadService.putImageToCloud(
-                    signedUrl,
-                    ContentUriRequestBody(context, Uri.parse(image)),
-                )
-            }
-    }
+@Inject
+constructor(
+    @ApplicationContext private val context: Context,
+    private val uploadService: UploadService,
+) : UploadRepository {
+    override suspend fun putImageToCloud(
+        signedUrl: String,
+        image: String,
+    ): Unit =
+        uploadService.putImageToCloud(
+            signedUrl,
+            ContentUriRequestBody(context, Uri.parse(image)),
+        )
+}

@@ -6,9 +6,9 @@ import androidx.lifecycle.viewModelScope
 import co.orange.core.amplitude.AmplitudeManager
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.IamportCertificationModel
-import co.orange.domain.usecase.AuthSignUpAndSaveStatusUseCase
-import co.orange.domain.usecase.IamportGetDataAndSaveUseCase
-import co.orange.domain.usecase.IamportGetTokenUseCase
+import co.orange.domain.usecase.auth.SignUpAndSaveStatusUseCase
+import co.orange.domain.usecase.certificate.GetPhoneCertificateDataUseCase
+import co.orange.domain.usecase.certificate.GetIamportTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,9 +25,9 @@ import javax.inject.Inject
 class PhoneViewModel
 @Inject
 constructor(
-    private val iamportGetTokenUseCase: IamportGetTokenUseCase,
-    private val iamportGetDataAndSaveUseCase: IamportGetDataAndSaveUseCase,
-    private val authSignUpAndSaveStatusUseCase: AuthSignUpAndSaveStatusUseCase,
+    private val getIamportTokenUseCase: GetIamportTokenUseCase,
+    private val getPhoneCertificateDataUseCase: GetPhoneCertificateDataUseCase,
+    private val signUpAndSaveStatusUseCase: SignUpAndSaveStatusUseCase,
 ) : ViewModel() {
     var certificatedUid: String = ""
 
@@ -85,7 +85,7 @@ constructor(
 
     fun postToGetIamportTokenFromServer() {
         viewModelScope.launch {
-            iamportGetTokenUseCase(certificatedUid)
+            getIamportTokenUseCase(certificatedUid)
                 .onSuccess { token ->
                     getCertificationDataFromServer(token)
                 }
@@ -97,7 +97,7 @@ constructor(
 
     private fun getCertificationDataFromServer(accessToken: String) {
         viewModelScope.launch {
-            iamportGetDataAndSaveUseCase(accessToken, certificatedUid)
+            getPhoneCertificateDataUseCase(accessToken, certificatedUid)
                 .onSuccess { response ->
                     _getIamportDataResult.emit(true)
                     postToSignUpFromServer(response, isTermMarketingSelected.value)
@@ -114,7 +114,7 @@ constructor(
         isTermMarketingSelected: Boolean?
     ) {
         viewModelScope.launch {
-            authSignUpAndSaveStatusUseCase(response, isTermMarketingSelected)
+            signUpAndSaveStatusUseCase(response, isTermMarketingSelected)
                 .onSuccess {
                     AmplitudeManager.apply {
                         trackEvent("complete_sign_up")

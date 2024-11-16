@@ -52,8 +52,9 @@ class HomeFragment() : BaseFragment<FragmentHomeBinding>(featureR.layout.fragmen
         detailActivityLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    setLikeStateWithIntent(
-                        result.data?.getBooleanExtra(EXTRA_IS_LIKED, false) ?: false,
+                    setLikeState(
+                        result.data?.getBooleanExtra(EXTRA_IS_LIKED, false),
+                        viewModel.clickedPosition
                     )
                 }
             }
@@ -74,8 +75,7 @@ class HomeFragment() : BaseFragment<FragmentHomeBinding>(featureR.layout.fragmen
         setRecyclerViewDeco()
         setListWithInfinityScroll()
         observeGetHomeDataState()
-        observeItemLikePlusState()
-        observeItemLikeMinusState()
+        observeLikeState()
     }
 
     override fun onResume() {
@@ -187,11 +187,12 @@ class HomeFragment() : BaseFragment<FragmentHomeBinding>(featureR.layout.fragmen
         )
     }
 
-    private fun setLikeStateWithIntent(isLiked: Boolean) {
+    private fun setLikeState(isLiked: Boolean?, position: Int) {
+        if (isLiked == null) return
         if (isLiked) {
-            adapter.plusItemLike(viewModel.clickedPosition)
+            adapter.plusItemLike(position)
         } else {
-            adapter.minusItemLike(viewModel.clickedPosition)
+            adapter.minusItemLike(position)
         }
     }
 
@@ -210,37 +211,10 @@ class HomeFragment() : BaseFragment<FragmentHomeBinding>(featureR.layout.fragmen
             }.launchIn(lifecycleScope)
     }
 
-    private fun observeItemLikePlusState() {
-        viewModel.itemLikePlusState.flowWithLifecycle(lifecycle).distinctUntilChanged()
-            .onEach { state ->
-                when (state) {
-                    is UiState.Success -> {
-                        adapter.plusItemLike(state.data)
-//                        with(binding) {
-//                            lottieLike.isVisible = true
-//                            lottieLike.playAnimation()
-//                            delay(500)
-//                            lottieLike.isVisible = false
-//                        }
-                    }
-
-                    is UiState.Failure -> toast(stringOf(R.string.error_msg))
-                    else -> return@onEach
-                }
-                viewModel.resetLikeState()
-            }.launchIn(lifecycleScope)
-    }
-
-    private fun observeItemLikeMinusState() {
-        viewModel.itemLikeMinusState.flowWithLifecycle(lifecycle).distinctUntilChanged()
-            .onEach { state ->
-                when (state) {
-                    is UiState.Success -> adapter.minusItemLike(state.data)
-                    is UiState.Failure -> toast(stringOf(R.string.error_msg))
-                    else -> return@onEach
-                }
-                viewModel.resetLikeState()
-            }.launchIn(lifecycleScope)
+    private fun observeLikeState() {
+        viewModel.likeState.flowWithLifecycle(lifecycle).distinctUntilChanged().onEach { isLiked ->
+            setLikeState(isLiked, viewModel.likedPosition)
+        }.launchIn(lifecycleScope)
     }
 
     override fun onDestroyView() {

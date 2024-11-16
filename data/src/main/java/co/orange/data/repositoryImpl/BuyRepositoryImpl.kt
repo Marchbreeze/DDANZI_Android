@@ -17,37 +17,25 @@ import co.orange.domain.repository.BuyRepository
 import javax.inject.Inject
 
 class BuyRepositoryImpl
-    @Inject
-    constructor(
-        private val buyDataSource: BuyDataSource,
-    ) : BuyRepository {
-        override suspend fun getBuyProgressData(productId: String): Result<BuyProgressModel> =
-            runCatching {
-                buyDataSource.getBuyProgressData(productId).data.toModel()
-            }
+@Inject
+constructor(
+    private val buyDataSource: BuyDataSource,
+) : BuyRepository {
+    override suspend fun getBuyProgressData(productId: String): BuyProgressModel =
+        buyDataSource.getBuyProgressData(productId).data.toModel()
 
-        override suspend fun postPaymentStart(request: PayStartRequestModel): Result<PayStartModel> =
-            runCatching {
-                buyDataSource.postPaymentStart(request.toDto()).data.toModel()
-            }
+    override suspend fun postPaymentStart(request: PayStartRequestModel): PayStartModel =
+        buyDataSource.postPaymentStart(request.toDto()).data.toModel()
 
-        override suspend fun patchPaymentEnd(request: PayEndRequestModel): Result<PayEndModel> =
-            runCatching {
-                buyDataSource.patchPaymentEnd(request.toDto()).data.toModel()
-            }
+    override suspend fun patchPaymentEnd(request: PayEndRequestModel): PayEndModel =
+        buyDataSource.patchPaymentEnd(request.toDto()).data.toModel()
 
-        override suspend fun postToRequestOrder(request: OrderRequestModel): Result<OrderIdModel> =
-            runCatching {
-                buyDataSource.postToRequestOrder(request.toDto()).data.toModel()
-            }
+    override suspend fun postToRequestOrder(request: OrderRequestModel): OrderIdModel =
+        buyDataSource.postToRequestOrder(request.toDto()).data.toModel()
 
-        override suspend fun getOrderInfo(orderId: String): Result<OrderInfoModel> =
-            runCatching {
-                buyDataSource.getOrderInfo(orderId).data.toModel()
-            }
+    override suspend fun getOrderInfo(orderId: String): OrderInfoModel =
+        buyDataSource.getOrderInfo(orderId).data.toModel()
 
-        override suspend fun patchOrderConfirm(orderId: String): Result<OrderConfirmModel> =
-            runCatching {
-                buyDataSource.patchOrderConfirm(orderId).data.toModel()
-            }
-    }
+    override suspend fun patchOrderConfirm(orderId: String): OrderConfirmModel =
+        buyDataSource.patchOrderConfirm(orderId).data.toModel()
+}

@@ -17,5 +17,5 @@ interface AuthRepository {
         request: SignUpRequestModel,
     ): SignUpModel
 
-    suspend fun getServerStatus(): Result<Boolean>
+    suspend fun getServerStatus(): Boolean
 }

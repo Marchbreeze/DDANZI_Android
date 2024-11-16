@@ -152,7 +152,6 @@ class SellOnboardingActivity :
                         setLoadingScreen(false)
                         sellProductDialog = SellProductDialog()
                         sellProductDialog?.show(supportFragmentManager, SELL_PRODUCT_DIALOG)
-                        viewModel.resetProductIdState()
                     }
 
                     is UiState.Failure -> {

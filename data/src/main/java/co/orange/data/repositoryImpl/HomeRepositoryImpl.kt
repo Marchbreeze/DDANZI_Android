@@ -8,24 +8,19 @@ import co.orange.domain.repository.HomeRepository
 import javax.inject.Inject
 
 class HomeRepositoryImpl
-    @Inject
-    constructor(
-        private val homeDataSource: HomeDataSource,
-    ) : HomeRepository {
-        override suspend fun getHomeData(page: Int): Result<HomeModel> = runCatching { homeDataSource.getHomeData(page).data.toModel() }
+@Inject
+constructor(
+    private val homeDataSource: HomeDataSource,
+) : HomeRepository {
+    override suspend fun getHomeData(page: Int): HomeModel =
+        homeDataSource.getHomeData(page).data.toModel()
 
-        override suspend fun getSearchResult(keyword: String): Result<SearchResultModel> =
-            runCatching {
-                homeDataSource.getSearchResult(keyword).data.toModel()
-            }
+    override suspend fun getSearchResult(keyword: String): SearchResultModel =
+        homeDataSource.getSearchResult(keyword).data.toModel()
 
-        override suspend fun getAlarmList(): Result<AlarmListModel> =
-            runCatching {
-                homeDataSource.getAlarmList().data.toModel()
-            }
+    override suspend fun getAlarmList(): AlarmListModel =
+        homeDataSource.getAlarmList().data.toModel()
 
-        override suspend fun patchToReadAlarm(alarmId: Long): Result<Boolean> =
-            runCatching {
-                homeDataSource.patchToReadAlarm(alarmId).data
-            }
-    }
+    override suspend fun patchToReadAlarm(alarmId: Long): Boolean =
+        homeDataSource.patchToReadAlarm(alarmId).data
+}

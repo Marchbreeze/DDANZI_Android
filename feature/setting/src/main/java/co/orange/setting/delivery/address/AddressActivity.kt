@@ -45,13 +45,9 @@ class AddressActivity : BaseActivity<ActivityAddressBinding>(featureR.layout.act
     }
 
     private fun initConfirmBtnListener() {
-        val addressId = intent.getLongExtra(EXTRA_ADDRESS_ID, -1)
+        viewModel.addressId = intent.getLongExtra(EXTRA_ADDRESS_ID, -1)
         binding.btnConfirm.setOnSingleClickListener {
-            if (addressId == DEFAULT_ID) {
-                viewModel.postToAddAddressToServer()
-            } else {
-                viewModel.putToModAddressToServer(addressId)
-            }
+            viewModel.setUserAddressToServer()
         }
     }
 

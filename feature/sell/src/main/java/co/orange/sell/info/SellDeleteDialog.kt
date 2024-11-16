@@ -3,7 +3,6 @@ package co.orange.sell.info
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -11,17 +10,13 @@ import co.orange.core.base.BaseDialog
 import co.orange.core.extension.setOnSingleClickListener
 import co.orange.core.extension.stringOf
 import co.orange.core.extension.toast
-import co.orange.core.navigation.NavigationManager
 import co.orange.core.state.UiState
 import co.orange.sell.R
-import co.orange.sell.databinding.DialogBankBinding
 import co.orange.sell.databinding.DialogSellDeleteBinding
-import co.orange.sell.progress.SellProgressViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class SellDeleteDialog :
@@ -57,9 +52,7 @@ class SellDeleteDialog :
     }
 
     private fun observeDeleteItemState() {
-        viewModel.deleteItemState
-            .flowWithLifecycle(lifecycle)
-            .distinctUntilChanged()
+        viewModel.deleteItemState.flowWithLifecycle(lifecycle).distinctUntilChanged()
             .onEach { state ->
                 when (state) {
                     is UiState.Success -> {

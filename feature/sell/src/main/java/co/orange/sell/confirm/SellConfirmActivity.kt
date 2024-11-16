@@ -48,9 +48,7 @@ class SellConfirmActivity :
 
     private fun initGuideBtnListener() {
         binding.btnSellGuide.setOnSingleClickListener {
-            Intent(Intent.ACTION_VIEW, Uri.parse(WEB_TERM_SELL)).apply {
-                startActivity(this)
-            }
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WEB_TERM_SELL)))
         }
     }
 
