@@ -3,12 +3,12 @@ package co.orange.domain.usecase.alarm
 import co.orange.domain.repository.HomeRepository
 import javax.inject.Inject
 
-class GetAlarmListUseCase @Inject constructor(
+class PatchAlarmToReadUseCase @Inject constructor(
     private val homeRepository: HomeRepository
 ) {
-    suspend operator fun invoke() =
+    suspend operator fun invoke(alarmId: Long) =
         runCatching {
-            val response = homeRepository.getAlarmList()
+            val response = homeRepository.patchToReadAlarm(alarmId)
             return@runCatching response
         }
 }

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import co.orange.core.state.UiState
 import co.orange.domain.entity.response.AlarmListModel
 import co.orange.domain.entity.response.AlarmListModel.AlarmItemModel
-import co.orange.domain.repository.HomeRepository
 import co.orange.domain.usecase.alarm.GetAlarmListUseCase
 import co.orange.domain.usecase.alarm.PatchAlarmToReadUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,10 +52,10 @@ constructor(
         viewModelScope.launch {
             patchAlarmToReadUseCase(item.alarmId)
                 .onSuccess {
-                _patchReadState.value = UiState.Success(item)
-            }.onFailure {
-                _patchReadState.value = UiState.Failure(it.message.toString())
-            }
+                    _patchReadState.value = UiState.Success(item)
+                }.onFailure {
+                    _patchReadState.value = UiState.Failure(it.message.toString())
+                }
         }
     }
 }
