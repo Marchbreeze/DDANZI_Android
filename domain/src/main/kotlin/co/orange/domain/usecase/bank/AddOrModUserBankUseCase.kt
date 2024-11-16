@@ -28,6 +28,6 @@ class AddOrModUserBankUseCase @Inject constructor(
         }
 
     companion object {
-        const val DEFAULT_ID: Long = -1
+        private const val DEFAULT_ID: Long = -1
     }
 }
