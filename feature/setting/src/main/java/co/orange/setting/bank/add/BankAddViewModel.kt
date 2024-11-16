@@ -3,7 +3,6 @@ package co.orange.setting.bank.add
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.orange.domain.repository.SettingRepository
 import co.orange.domain.usecase.bank.AddOrModUserBankUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
