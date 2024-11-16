@@ -8,9 +8,9 @@ import co.orange.domain.entity.response.NicknameModel
 interface ProfileRepository {
     suspend fun getNickname(): NicknameModel
 
-    suspend fun getInterestHistory(): Result<HistoryInterestModel>
+    suspend fun getInterestHistory(): HistoryInterestModel
 
-    suspend fun getBuyHistory(): Result<HistoryBuyModel>
+    suspend fun getBuyHistory(): HistoryBuyModel
 
-    suspend fun getSellHistory(): Result<HistorySellModel>
+    suspend fun getSellHistory(): HistorySellModel
 }

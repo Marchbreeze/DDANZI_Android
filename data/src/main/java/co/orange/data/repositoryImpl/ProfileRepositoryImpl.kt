@@ -16,18 +16,12 @@ constructor(
     override suspend fun getNickname(): NicknameModel =
         profileDataSource.getNickname().data.toModel()
 
-    override suspend fun getInterestHistory(): Result<HistoryInterestModel> =
-        runCatching {
-            profileDataSource.getInterestHistory().data.toModel()
-        }
+    override suspend fun getInterestHistory(): HistoryInterestModel =
+        profileDataSource.getInterestHistory().data.toModel()
 
-    override suspend fun getBuyHistory(): Result<HistoryBuyModel> =
-        runCatching {
-            profileDataSource.getBuyHistory().data.toModel()
-        }
+    override suspend fun getBuyHistory(): HistoryBuyModel =
+        profileDataSource.getBuyHistory().data.toModel()
 
-    override suspend fun getSellHistory(): Result<HistorySellModel> =
-        kotlin.runCatching {
-            profileDataSource.getSellHistory().data.toModel()
-        }
+    override suspend fun getSellHistory(): HistorySellModel =
+        profileDataSource.getSellHistory().data.toModel()
 }
