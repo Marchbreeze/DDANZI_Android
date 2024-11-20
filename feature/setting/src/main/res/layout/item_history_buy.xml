@@ -38,9 +38,9 @@
             <TextView
                 android:id="@+id/tv_buy_item_date"
                 style="@style/TextAppearance.DDanzi.Body6"
-                android:textColor="@color/gray_3"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textColor="@color/gray_3"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -76,11 +76,11 @@
                 style="@style/TextAppearance.DDanzi.Body6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginBottom="3dp"
                 android:textColor="@color/gray_3"
-                app:layout_constraintStart_toEndOf="@id/tv_buy_item_new_price"
                 app:layout_constraintBottom_toBottomOf="@id/tv_buy_item_new_price"
+                app:layout_constraintStart_toEndOf="@id/tv_buy_item_new_price"
                 tools:text="@string/ex_item_real_price" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
