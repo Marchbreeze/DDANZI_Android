@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import co.orange.core.util.ItemDiffCallback
 import co.orange.domain.entity.response.ProductModel
-import co.orange.setting.databinding.ItemHistoryItemBinding
+import co.orange.setting.databinding.ItemProductBinding
 
 class HistoryInterestAdapter(
     private val itemClick: (String) -> (Unit),
@@ -15,8 +15,8 @@ class HistoryInterestAdapter(
         viewType: Int,
     ): HistoryInterestViewHolder {
         val inflater by lazy { LayoutInflater.from(parent.context) }
-        val binding: ItemHistoryItemBinding =
-            ItemHistoryItemBinding.inflate(inflater, parent, false)
+        val binding: ItemProductBinding =
+            ItemProductBinding.inflate(inflater, parent, false)
         return HistoryInterestViewHolder(binding, itemClick)
     }
 
