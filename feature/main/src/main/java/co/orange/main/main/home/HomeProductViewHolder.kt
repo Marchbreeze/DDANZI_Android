@@ -7,11 +7,11 @@ import co.orange.core.extension.setOnSingleClickListener
 import co.orange.core.extension.setOverThousand
 import co.orange.core.extension.setPriceForm
 import co.orange.domain.entity.response.ProductModel
-import co.orange.main.databinding.ItemHomeProductBinding
+import co.orange.main.databinding.ItemProductBinding
 import coil.load
 
 class HomeProductViewHolder(
-    val binding: ItemHomeProductBinding,
+    val binding: ItemProductBinding,
     val productClick: (String, Int) -> (Unit),
     val likeClick: (String, Boolean, Int) -> (Unit),
 ) :
