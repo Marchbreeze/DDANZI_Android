@@ -88,16 +88,19 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>(featureR.layout.act
         when (viewModel.currentType) {
             TYPE_BUY -> {
                 binding.tvHistoryTitle.text = stringOf(R.string.profile_history_buy_title)
+                binding.rvHistoryVertical.isVisible = true
                 viewModel.getBuyListFromServer()
             }
 
             TYPE_SELL -> {
                 binding.tvHistoryTitle.text = stringOf(R.string.profile_history_sell_title)
+                binding.rvHistoryVertical.isVisible = true
                 viewModel.getSellListFromServer()
             }
 
             TYPE_INTEREST -> {
                 binding.tvHistoryTitle.text = stringOf(R.string.profile_history_interest_title)
+                binding.rvHistoryVertical.isVisible = true
                 viewModel.getInterestListFromServer()
             }
 
@@ -115,7 +118,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>(featureR.layout.act
                                 getString(R.string.profile_history_count, state.data.totalCount)
                             tvHistoryEmpty.text = getString(R.string.profile_history_buy_empty)
                             layoutHistoryEmpty.isVisible = state.data.orderProductList.isEmpty()
-                            rvHistory.adapter = buyAdapter
+                            rvHistoryGrid.adapter = buyAdapter
                         }
                         buyAdapter.submitList(state.data.orderProductList)
                     }
@@ -136,7 +139,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>(featureR.layout.act
                                 getString(R.string.profile_history_count, state.data.totalCount)
                             tvHistoryEmpty.text = getString(R.string.profile_history_buy_empty)
                             layoutHistoryEmpty.isVisible = state.data.itemProductList.isEmpty()
-                            rvHistory.adapter = sellAdapter
+                            rvHistoryGrid.adapter = sellAdapter
                         }
                         sellAdapter.submitList(state.data.itemProductList)
                     }
@@ -157,7 +160,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>(featureR.layout.act
                                 getString(R.string.profile_history_count, state.data.totalCount)
                             tvHistoryEmpty.text = getString(R.string.profile_history_interest_empty)
                             layoutHistoryEmpty.isVisible = state.data.productList.isEmpty()
-                            rvHistory.adapter = interestAdapter
+                            rvHistoryGrid.adapter = interestAdapter
                         }
                         interestAdapter.submitList(state.data.productList)
                     }

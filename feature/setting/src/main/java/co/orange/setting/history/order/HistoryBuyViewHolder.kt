@@ -19,11 +19,11 @@ class HistoryBuyViewHolder(
         with(binding) {
             tvBuyItemTitle.text = item.productName.breakLines()
             ivBuyItem.load(item.imgUrl)
-            tvBuyItemRealPrice.apply {
+            tvBuyItemOldPrice.apply {
                 text = item.originPrice.setPriceForm()
                 paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             }
-            tvBuyItemNowPrice.text = item.salePrice.setPriceForm()
+            tvBuyItemNewPrice.text = item.salePrice.setPriceForm()
             tvBuyItemDate.text = item.paidAt.convertDateFormat()
 
             root.setOnSingleClickListener {

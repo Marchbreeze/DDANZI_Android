@@ -175,7 +175,7 @@ class HomeFragment() : BaseFragment<FragmentHomeBinding>(featureR.layout.fragmen
         binding.rvHome.addItemDecoration(
             GridItemDecoration(
                 spanCount = 2,
-                spacing = 30.dpToPx(requireContext()),
+                spacing = 6.dpToPx(requireContext()),
                 bottomPadding = 50.dpToPx(requireContext()),
             ),
         )

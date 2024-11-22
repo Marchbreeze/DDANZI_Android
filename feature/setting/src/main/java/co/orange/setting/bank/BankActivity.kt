@@ -15,8 +15,8 @@ import co.orange.core.state.UiState
 import co.orange.domain.entity.response.BankModel
 import co.orange.domain.enums.BankType
 import co.orange.setting.bank.add.BankAddActivity
-import co.orange.setting.bank.add.BankAddActivity.Companion.DEFAULT_ID
 import co.orange.setting.databinding.ActivityBankBinding
+import co.orange.setting.delivery.address.AddressActivity.Companion.DEFAULT_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn

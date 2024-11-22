@@ -8,7 +8,7 @@ import co.orange.core.R
 import co.orange.core.util.ItemDiffCallback
 import co.orange.domain.entity.response.ProductModel
 import co.orange.main.databinding.ItemHomeBannerBinding
-import co.orange.main.databinding.ItemHomeProductBinding
+import co.orange.main.databinding.ItemProductBinding
 
 class HomeAdapter(
     private val bannerClick: (String) -> (Unit),
@@ -33,7 +33,7 @@ class HomeAdapter(
 
             VIEW_TYPE_PRODUCT ->
                 HomeProductViewHolder(
-                    ItemHomeProductBinding.inflate(inflater, parent, false),
+                    ItemProductBinding.inflate(inflater, parent, false),
                     productClick,
                     likeClick,
                 )

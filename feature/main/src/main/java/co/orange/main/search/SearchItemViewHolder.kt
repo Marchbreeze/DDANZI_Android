@@ -7,11 +7,11 @@ import co.orange.core.extension.setOnSingleClickListener
 import co.orange.core.extension.setOverThousand
 import co.orange.core.extension.setPriceForm
 import co.orange.domain.entity.response.ProductModel
-import co.orange.main.databinding.ItemSearchProductBinding
+import co.orange.main.databinding.ItemProductBinding
 import coil.load
 
 class SearchItemViewHolder(
-    val binding: ItemSearchProductBinding,
+    val binding: ItemProductBinding,
     val itemClick: (ProductModel) -> (Unit),
     val likeClick: (String, Boolean, Int) -> (Unit),
 ) :
@@ -21,21 +21,22 @@ class SearchItemViewHolder(
         position: Int,
     ) {
         with(binding) {
-            tvSearchItemTitle.text = item.name.breakLines()
-            ivSearchItem.load(item.imgUrl)
-            tvSearchItemRealPrice.apply {
+            root.setOnSingleClickListener { itemClick(item) }
+
+            btnItemLike.setOnSingleClickListener {
+                likeClick(item.productId, item.isInterested, position)
+            }
+
+            tvProductTitle.text = item.name.breakLines()
+            ivProductImage.load(item.imgUrl)
+
+            tvProductOldPrice.apply {
                 text = item.originPrice.setPriceForm()
                 paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             }
-            tvSearchItemNowPrice.text = item.salePrice.setPriceForm()
-            tvSearchItemLike.text = item.interestCount.setOverThousand()
-            ivSearchItemLike.isSelected = item.isInterested
-
-            root.setOnSingleClickListener { itemClick(item) }
-
-            btnSearchLike.setOnSingleClickListener {
-                likeClick(item.productId, item.isInterested, position)
-            }
+            tvProductNewPrice.text = item.salePrice.setPriceForm()
+            tvProductLikeCount.text = item.interestCount.setOverThousand()
+            btnItemLike.isSelected = item.isInterested
         }
     }
 }

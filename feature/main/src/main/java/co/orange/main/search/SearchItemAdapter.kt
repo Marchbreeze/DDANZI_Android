@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import co.orange.core.util.ItemDiffCallback
 import co.orange.domain.entity.response.ProductModel
-import co.orange.main.databinding.ItemSearchProductBinding
+import co.orange.main.databinding.ItemProductBinding
 
 class SearchItemAdapter(
     private val itemClick: (ProductModel) -> Unit,
@@ -16,8 +16,8 @@ class SearchItemAdapter(
         viewType: Int,
     ): SearchItemViewHolder {
         val inflater by lazy { LayoutInflater.from(parent.context) }
-        val binding: ItemSearchProductBinding =
-            ItemSearchProductBinding.inflate(inflater, parent, false)
+        val binding: ItemProductBinding =
+            ItemProductBinding.inflate(inflater, parent, false)
         return SearchItemViewHolder(binding, itemClick, likeClick)
     }
 

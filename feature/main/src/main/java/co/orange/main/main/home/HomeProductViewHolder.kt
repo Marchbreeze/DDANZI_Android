@@ -7,11 +7,11 @@ import co.orange.core.extension.setOnSingleClickListener
 import co.orange.core.extension.setOverThousand
 import co.orange.core.extension.setPriceForm
 import co.orange.domain.entity.response.ProductModel
-import co.orange.main.databinding.ItemHomeProductBinding
+import co.orange.main.databinding.ItemProductBinding
 import coil.load
 
 class HomeProductViewHolder(
-    val binding: ItemHomeProductBinding,
+    val binding: ItemProductBinding,
     val productClick: (String, Int) -> (Unit),
     val likeClick: (String, Boolean, Int) -> (Unit),
 ) :
@@ -27,15 +27,15 @@ class HomeProductViewHolder(
                 likeClick(item.productId, item.isInterested, position)
             }
 
-            tvHomeItemTitle.text = item.name.breakLines()
-            ivHomeItem.load(item.imgUrl)
+            tvProductTitle.text = item.name.breakLines()
+            ivProductImage.load(item.imgUrl)
 
-            tvHomeItemRealPrice.apply {
+            tvProductOldPrice.apply {
                 text = item.originPrice.setPriceForm()
                 paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
             }
-            tvHomeItemNowPrice.text = item.salePrice.setPriceForm()
-            tvHomeItemLike.text = item.interestCount.setOverThousand()
+            tvProductNewPrice.text = item.salePrice.setPriceForm()
+            tvProductLikeCount.text = item.interestCount.setOverThousand()
             btnItemLike.isSelected = item.isInterested
         }
     }
