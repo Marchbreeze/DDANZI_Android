@@ -118,7 +118,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>(featureR.layout.act
                                 getString(R.string.profile_history_count, state.data.totalCount)
                             tvHistoryEmpty.text = getString(R.string.profile_history_buy_empty)
                             layoutHistoryEmpty.isVisible = state.data.orderProductList.isEmpty()
-                            rvHistoryGrid.adapter = buyAdapter
+                            rvHistoryVertical.adapter = buyAdapter
                         }
                         buyAdapter.submitList(state.data.orderProductList)
                     }

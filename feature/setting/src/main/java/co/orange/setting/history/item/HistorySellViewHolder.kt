@@ -8,11 +8,11 @@ import co.orange.core.extension.setOnSingleClickListener
 import co.orange.core.extension.setOverThousand
 import co.orange.core.extension.setPriceForm
 import co.orange.domain.entity.response.HistorySellModel
-import co.orange.setting.databinding.ItemProductBinding
+import co.orange.setting.databinding.ItemHistoryProductBinding
 import coil.load
 
 class HistorySellViewHolder(
-    val binding: ItemProductBinding,
+    val binding: ItemHistoryProductBinding,
     val itemClick: (String) -> (Unit),
 ) :
     RecyclerView.ViewHolder(binding.root) {
