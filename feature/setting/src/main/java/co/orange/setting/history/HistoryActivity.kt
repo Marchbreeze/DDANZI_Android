@@ -94,13 +94,13 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding>(featureR.layout.act
 
             TYPE_SELL -> {
                 binding.tvHistoryTitle.text = stringOf(R.string.profile_history_sell_title)
-                binding.rvHistoryVertical.isVisible = true
+                binding.rvHistoryGrid.isVisible = true
                 viewModel.getSellListFromServer()
             }
 
             TYPE_INTEREST -> {
                 binding.tvHistoryTitle.text = stringOf(R.string.profile_history_interest_title)
-                binding.rvHistoryVertical.isVisible = true
+                binding.rvHistoryGrid.isVisible = true
                 viewModel.getInterestListFromServer()
             }
 
