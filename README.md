@@ -42,7 +42,7 @@
 
 <br>
 
-## CONTRIBUTOR
+## CONTRIBUTOR
 
 [![contributors](https://contrib.rocks/image?repo=Orange-Co/DDANZI_Android)](https://github.com/Orange-Co/DDANZI_Android/contributors)
 
